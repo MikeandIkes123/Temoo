@@ -3,7 +3,14 @@
 {% block content %}
 
 <br><br>
+{% if current_user.is_authenticated %}
+<p>great success</p>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> get started</p>
+{% endif %}
 
+
+<br><br>
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -24,8 +31,15 @@
   </tbody>
 </table>
 
-<br><br>
-{% if current_user.is_authenticated %}
+<form action="{{ url_for('purchaseSearch.search_purchases') }}" method="get">
+  <div class="form-group">
+      <label for="user_id" style="color:black">Search Purchases by User ID:</label>
+      <input type="text" class="form-control" id="user_id" name="user_id" placeholder="Enter User ID">
+      <button type="submit" class="btn btn-primary mt-2">Search</button>
+  </div>
+</form>
+
+<!-- {% if current_user.is_authenticated %}
 <h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -47,6 +61,6 @@
 </table>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
-{% endif %}
+{% endif %} -->
 
 {% endblock %}
