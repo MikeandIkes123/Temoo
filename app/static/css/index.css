@@ -1,0 +1,15 @@
+.top-k-container{
+    width: 80%;
+    display: flex;
+    justify-content: start;
+    font-size: 20px;
+}
+.filter-text{
+    font-size: 100%;
+}
+.top-k-input{  
+    margin-left: 2%;
+    margin-right:1%;
+    height: 100%;
+    width: 40%;
+}

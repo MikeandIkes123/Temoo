@@ -23,6 +23,9 @@ def create_app():
 
     from .purchaseSearch import bp as purchaseSearch_bp
     app.register_blueprint(purchaseSearch_bp)
+    
+    from .productSearch import bp as productSearch_bp
+    app.register_blueprint(productSearch_bp)
 
     from .myprofile import bp as myprofile_bp
     app.register_blueprint(myprofile_bp)

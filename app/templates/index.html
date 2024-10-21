@@ -2,6 +2,10 @@
 
 {% block content %}
 
+<head>
+  <link rel="stylesheet" href="../static/css/index.css">
+</head>
+
 <br><br>
 {% if current_user.is_authenticated %}
 <p>great success</p>
@@ -11,7 +15,7 @@
 
 
 <br><br>
-<h2>Products for sale:</h2>
+<!-- <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -29,7 +33,18 @@
       </tr>
     {% endfor %}
   </tbody>
-</table>
+</table> -->
+
+
+<form action="{{ url_for('productSearch.search_products') }}" method="get">
+  <div class="top-k-container">
+    <div class="filter-text">Search top k most expensive products: </div>
+    <input type="text" class="top-k-input" id="top_k_expensive" name="top_k_expensive" placeholder="Enter integer k, (or leave blank for all)">
+    <button type="submit" class="btn btn-primary btn-sm">filter</button>
+  </div>
+</form>  
+
+<br></br>
 
 <form action="{{ url_for('purchaseSearch.search_purchases') }}" method="get">
   <div class="form-group">
