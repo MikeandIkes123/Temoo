@@ -67,3 +67,17 @@ WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+
+class Seller():
+    def __init__(self, uid, address):
+        self.uid = uid
+        self.address = address
+
+        
+    # TODO: implement seller as an ISA relation with user 
+    # should update User() with register as seller page:
+    # - redirect to second page to fill in address and load inventory 
+    # - add seller to sellers table
+    # - add inventory to products table
+    
+    
