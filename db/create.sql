@@ -31,3 +31,9 @@ CREATE TABLE Feedbacks (
     comment TEXT NOT NULL,
     comment_time timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
+
+CREATE TABLE Sells(
+    uid INT NOT NULL REFERENCES Users(id),
+    pid INT NOT NULL REFERENCES Products(id),
+    PRIMARY KEY (uid, pid)
+);

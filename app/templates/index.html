@@ -61,6 +61,16 @@
       <button type="submit" class="btn btn-primary mt-2">Search</button>
   </div>
 </form>
+
+
+<form action="{{ url_for('sellerSearch.search_sellers') }}" method="get">
+  <div class="form-group">
+      <label for="seller_id" style="color:black">Search Products by Seller ID:</label>
+      <input type="text" class="form-control" id="seller_id" name="seller_id" placeholder="Enter Seller ID">
+      <button type="submit" class="btn btn-primary mt-2">Search</button>
+  </div>
+</form>
+
 <!-- {% if current_user.is_authenticated %}
 <h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>

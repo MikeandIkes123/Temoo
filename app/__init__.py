@@ -32,5 +32,8 @@ def create_app():
     
     from .feedbackSearch import bp as feedbackSearch_bp
     app.register_blueprint(feedbackSearch_bp)
+    
+    from .sellerSearch import bp as sellerSearch_bp
+    app.register_blueprint(sellerSearch_bp)
 
     return app
