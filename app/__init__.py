@@ -26,5 +26,8 @@ def create_app():
 
     from .myprofile import bp as myprofile_bp
     app.register_blueprint(myprofile_bp)
+    
+    from .feedbackSearch import bp as feedbackSearch_bp
+    app.register_blueprint(feedbackSearch_bp)
 
     return app

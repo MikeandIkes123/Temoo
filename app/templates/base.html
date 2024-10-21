@@ -48,8 +48,8 @@
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:aliceblue">Welcome to Temu(sic)</h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+      <h1 style="color:rgb(255, 136, 0)">Welcome to Temu</h1>
+      <div style="color: rgb(255, 136, 0); text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! 
           <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
