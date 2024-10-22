@@ -48,11 +48,12 @@
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:rgb(255, 136, 0)">Welcome to Temu</h1>
+      <h1 style="color:rgb(255, 136, 0)">Welcome to Temoo</h1>
       <div style="color: rgb(255, 136, 0); text-align: right; margin-bottom: 25px">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! 
           <a href="{{ url_for('index.index') }}" type="button" class="btn btn-light">Home</a>
+          <a href="{{ url_for('cart.view_cart') }}" type="button" class="btn btn-light">View Cart</a> <!-- View Cart Button -->
           <a href="{{ url_for('myprofile.myprofile') }}" type="button" class="btn btn-light">My Profile</a>
           <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
         {% else %}
@@ -68,3 +69,4 @@
 </body>
 
 </html>
+

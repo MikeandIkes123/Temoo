@@ -37,3 +37,10 @@ CREATE TABLE Sells(
     pid INT NOT NULL REFERENCES Products(id),
     PRIMARY KEY (uid, pid)
 );
+
+CREATE TABLE Cart(
+    uid INT NOT NULL REFERENCES Users(id),
+    pid INT NOT NULL REFERENCES Products(id),
+    quantity INT NOT NULL,
+    PRIMARY KEY (uid, pid)
+);
