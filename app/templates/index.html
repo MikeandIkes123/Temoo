@@ -41,7 +41,7 @@
 <form action="{{ url_for('productSearch.search_products') }}" method="get">
   <div class="top-k-container">
     <div class="filter-text">Search top k most expensive products: </div>
-    <input type="text" class="top-k-input" id="top_k_expensive" name="top_k_expensive" placeholder="Enter integer k, (or leave blank for all)">
+    <input type="text" class="top-k-input" id="top_k_expensive" name="top_k_expensive" placeholder="Enter integer k>=0, (or leave blank for all)">
     <button type="submit" class="btn btn-primary btn-sm">filter</button>
   </div>
 </form>  
