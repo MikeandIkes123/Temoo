@@ -7,5 +7,11 @@
 <p>Name: {{current_user.firstname}} {{current_user.lastname}}</p>
 <p>Email: {{current_user.email}}</p>
 <p>UID: {{current_user.id}}</p>
+<p>Address: {{current_user.address}}</p>
+<p>Balance: {{current_user.balance}}</p>
+
+<br/>
+<a class="btn btn-outline-dark" href="{{ url_for('myprofile.purchase_history') }}" role="button">Purchase History</a><br/>
+<br/>
 
 {% endblock %}
