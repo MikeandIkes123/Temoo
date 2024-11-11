@@ -72,6 +72,49 @@ WHERE id = :id
                               id=id)
         return User(*(rows[0])) if rows else None
 
+
+    @staticmethod
+    def update_profile(id, firstname, lastname, email, address, password):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET firstname = :firstname, lastname = :lastname, email = :email, address = :address, password = :password
+WHERE id = :id
+""",
+                                 firstname = firstname,
+                                 lastname = lastname,
+                                 email = email,
+                                 address = address,
+                                 id = id,
+                                 password=generate_password_hash(password))
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
+
+    @staticmethod
+    def update_balance(id, deposit, withdrawal):
+        rows1 = app.db.execute("""
+SELECT balance
+FROM Users
+WHERE id = :id
+""",
+        id = id)
+        balance1 = float(rows1[0][0])
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET balance = :balance
+WHERE id = :id
+""",
+                                id = id,
+                                balance = balance1 + float(deposit) - float(withdrawal))
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
+
+
 class Seller():
     def __init__(self, uid, address):
         self.uid = uid

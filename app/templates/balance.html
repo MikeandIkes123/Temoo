@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update Balance</h1>
+
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.deposit.label}}<br/>
+    {{ form.deposit(size=32)}}<br/>
+    {% for error in form.deposit.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
+    {{ form.withdrawal.label }}<br/>
+    {{ form.withdrawal(size=32) }}<br/>
+    {% for error in form.withdrawal.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>{{ form.submit() }}</p>
+</form>
+
+{% endblock %}

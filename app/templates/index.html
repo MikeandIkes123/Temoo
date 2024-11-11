@@ -7,13 +7,10 @@
 </head>
 
 <br><br>
-{% if current_user.is_authenticated %}
-<p>great success</p>
-<p><a href="{{ url_for('cart.view_cart') }}" class="btn btn-primary">Go to Cart</a></p> <!-- Button to View Cart -->
-
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> get started</p>
+{% if not current_user.is_authenticated %}
+  <p><a href="{{ url_for('users.login') }}">Log in</a> to get started</p>
 {% endif %}
+
 
 
 <br><br>
