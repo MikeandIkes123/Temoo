@@ -6,16 +6,18 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, firstname, lastname, address, balance):
         self.id = id
         self.email = email
         self.firstname = firstname
         self.lastname = lastname
+        self.address = address
+        self.balance = balance
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
+SELECT password, id, email, firstname, lastname, address, balance
 FROM Users
 WHERE email = :email
 """,
@@ -39,16 +41,18 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(email, password, firstname, lastname, address, balance):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
+INSERT INTO Users(email, password, firstname, lastname, address, balance)
+VALUES(:email, :password, :firstname, :lastname, :address, :balance)
 RETURNING id
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname, lastname=lastname)
+                                  firstname=firstname, lastname=lastname,
+                                  address=address,
+                                  balance=balance)
             id = rows[0][0]
             return User.get(id)
         except Exception as e:
@@ -61,12 +65,55 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
+SELECT id, email, firstname, lastname, address, balance
 FROM Users
 WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+
+
+    @staticmethod
+    def update_profile(id, firstname, lastname, email, address, password):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET firstname = :firstname, lastname = :lastname, email = :email, address = :address, password = :password
+WHERE id = :id
+""",
+                                 firstname = firstname,
+                                 lastname = lastname,
+                                 email = email,
+                                 address = address,
+                                 id = id,
+                                 password=generate_password_hash(password))
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
+
+    @staticmethod
+    def update_balance(id, deposit, withdrawal):
+        rows1 = app.db.execute("""
+SELECT balance
+FROM Users
+WHERE id = :id
+""",
+        id = id)
+        balance1 = float(rows1[0][0])
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET balance = :balance
+WHERE id = :id
+""",
+                                id = id,
+                                balance = balance1 + float(deposit) - float(withdrawal))
+            return User.get(id)
+        except Exception as e:
+            print(str(e))
+            return None
+
 
 class Seller():
     def __init__(self, uid, address):

@@ -2,13 +2,14 @@
 
 {% block content %}
 
-<h1>Register</h1>
+<h1>Edit Profile</h1>
+<p>Update As Needed</p>
 
 <form action="" method="post">
   {{ form.hidden_tag() }}
   <p>
-    {{ form.firstname.label }}<br/>
-    {{ form.firstname(size=32) }}<br/>
+    {{ form.firstname.label}}<br/>
+    {{ form.firstname(size=32)}}<br/>
     {% for error in form.firstname.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}

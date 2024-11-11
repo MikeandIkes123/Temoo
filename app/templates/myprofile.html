@@ -2,10 +2,49 @@
 
 {% block content %}
 
-<h2>{{title}}</h2>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ title }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>UID:</strong> {{ current_user.id }}</p>
+                </div>
+            </div>
 
-<p>Name: {{current_user.firstname}} {{current_user.lastname}}</p>
-<p>Email: {{current_user.email}}</p>
-<p>UID: {{current_user.id}}</p>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Name:</strong> {{ current_user.firstname }} {{ current_user.lastname }}</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Address:</strong> {{ current_user.address }}</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Balance:</strong> ${{ current_user.balance }}
+                        <a href="{{ url_for('myprofile.update_balance') }}" class="btn btn-sm btn-outline-dark">Update Balance</a>
+                    </p>
+                </div>
+            </div>
+
+            <br/>
+            <a href="{{ url_for('myprofile.update_profile') }}" class="btn btn-outline-dark">Edit Profile</a>
+            <a href="{{ url_for('myprofile.purchase_history') }}" class="btn btn-outline-dark" role="button">View Purchase History</a>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
