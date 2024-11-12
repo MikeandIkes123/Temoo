@@ -111,7 +111,6 @@
     {% block content %}{% endblock %}
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
   <script>
     function updateFormAction() {
       const form = document.getElementById('combined-search-form');
@@ -141,8 +140,7 @@
           break;
       }
     }
-
-    // Initialize the form action on page load
+    // add the event listner to DOMContentLoaded - something about updating as soon as the document loads
     document.addEventListener('DOMContentLoaded', updateFormAction);
   </script>
 
