@@ -9,41 +9,152 @@
         height: 40px;
         width: 50px;
     }
+    th {
+      cursor: pointer;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 0px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      border-width: 1px 1px 0;
+      background-color: #f7f7f7;
+    }
+
+    .content {
+      margin: 20px;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 5px 10px;
+      margin: 0 5px;
+      cursor: pointer;
+      outline: 1px solid #494a4f;
+      border-radius: 1px;
+      border: none;
+    }
+
+    .hidden {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .pagination button.active {
+      background-color: #007bff;
+      color: white;
+    }
 </style>
 </head>
 
 <h2>Products for sale:</h2>
-<table id="productsTable" class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product ID</th>
-      <th onclick="sortAlphaTable(0)" scope="col">Product Name</th>
-      <th onclick="sortNumericTable(1)" scope="col">Price</th>
-      <th onclick="sortAlphaTable(2)" scope="col">Description</th>
-      <th onclick="sortAlphaTable(3)" scope="col">Main Category</th>
-      <th onclick="sortNumericTable(4)" scope="col">Ratings</th>
-      <th scope="col">Image</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in products%}
+<article class="content">
+  <table id="productsTable" class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
       <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.price}}</td>
-        <td>{{product.description}}</td>
-        <td>{{product.main_category}}</td>
-        <td>{{product.ratings}}</td>
-        <td>
-          <img src={{product.image_url}}
-                       alt="">
-        </td>
-        
+        <th scope="col">Product ID</th>
+        <th onclick="sortAlphaTable(0)" scope="col">Product Name</th>
+        <th onclick="sortNumericTable(1)" scope="col">Price</th>
+        <th onclick="sortAlphaTable(2)" scope="col">Description</th>
+        <th onclick="sortAlphaTable(3)" scope="col">Main Category</th>
+        <th onclick="sortNumericTable(4)" scope="col">Ratings</th>
+        <th scope="col">Image</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for product in products%}
+        <tr>
+          <th scope="row">{{product.id}}</th>
+          <td>{{product.name}}</td>
+          <td>{{product.price}}</td>
+          <td>{{product.description}}</td>
+          <td>{{product.main_category}}</td>
+          <td>{{product.ratings}}</td>
+          <td>
+            <img src={{product.image_url}}
+                         alt="">
+          </td>
+          
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const content = document.querySelector('.content'); 
+    const itemsPerPage = 5;
+    let currentPage = 0;
+    const items = Array.from(content.getElementsByTagName('tr')).slice(1);
 
+  function showPage(page) {
+    const startIndex = page * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    items.forEach((item, index) => {
+      item.classList.toggle('hidden', index < startIndex || index >= endIndex);
+    });
+    updateActiveButtonStates();
+  }
+
+  function createPageButtons() {
+    const totalPages = Math.ceil(items.length / itemsPerPage);
+    const paginationContainer = document.createElement('div');
+    const paginationDiv = document.body.appendChild(paginationContainer);
+    paginationContainer.classList.add('pagination');
+
+    // Add page buttons
+    for (let i = 0; i < totalPages; i++) {
+      const pageButton = document.createElement('button');
+      pageButton.textContent = i + 1;
+      pageButton.addEventListener('click', () => {
+        currentPage = i;
+        showPage(currentPage);
+        updateActiveButtonStates();
+      });
+
+        content.appendChild(paginationContainer);
+        paginationDiv.appendChild(pageButton);
+      }
+  }
+
+  function updateActiveButtonStates() {
+    const pageButtons = document.querySelectorAll('.pagination button');
+    pageButtons.forEach((button, index) => {
+      if (index === currentPage) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+  }
+
+    createPageButtons(); // Call this function to create the page buttons initially
+    showPage(currentPage);
+  });
+</script>
 <script>
   function sortAlphaTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
