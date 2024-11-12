@@ -2,16 +2,28 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available):
+    def __init__(self, id, name, price, available, description="", main_category="", sub_category="", ratings="", no_of_ratings="", image_url=""):
         self.id = id
         self.name = name
         self.price = price
         self.available = available
-
+        self.description = description
+        self.main_category = main_category
+        self.sub_category = sub_category
+        self.ratings = ratings
+        self.no_of_ratings = no_of_ratings
+        self.image_url = image_url
+    
     @staticmethod
     def get(id):
+#         rows = app.db.execute('''
+# SELECT id, name, price, available
+# FROM Products
+# WHERE id = :id
+# ''',
+#                               id=id)
         rows = app.db.execute('''
-SELECT id, name, price, available
+SELECT *
 FROM Products
 WHERE id = :id
 ''',
@@ -20,8 +32,14 @@ WHERE id = :id
 
     @staticmethod
     def get_all(available=True):
+#         rows = app.db.execute('''
+# SELECT id, name, price, available
+# FROM Products
+# WHERE available = :available
+# ''',
+#                               available=available)
         rows = app.db.execute('''
-SELECT id, name, price, available
+SELECT *
 FROM Products
 WHERE available = :available
 ''',
