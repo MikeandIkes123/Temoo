@@ -9,6 +9,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
+  <!-- TODO: do we need to move this to a base.css file?? -->
   <style>
     body {
       font-family: "Roboto", sans-serif;
@@ -30,12 +31,9 @@
     .navbar-nav .nav-link:hover {
       color: rgb(255, 136, 0) !important;
     }
-
     .main-content {
       padding: 2rem;
     }
-
-
     .btn-black {
       background-color: #444 !important;
       color: #fff;
@@ -45,16 +43,51 @@
       background-color: #333 !important;
       color: #fff;
     }
+    .navbar .search-bar {
+      max-width: 1500px;  
+      width: 100%;      
+    }
+    .search-form-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .form-control-sm {
+      height: 35px; 
+    }
+    .form-control {
+      max-width: 500px; 
+    }
   </style>
 </head>
 
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="{{ url_for('index.index') }}">Welcome to Temoo</a>
+    <a class="navbar-brand" href="{{ url_for('index.index') }}">
+      <img src="{{ url_for('static', filename='assets/temoo-nobg.png') }}" width="150px" height="auto">
+    </a>
+    <ul class="navbar-nav mx-auto">
+      <li class="nav-item">
+        <div class="search-form-wrapper">
+          <form action="" method="get" id="combined-search-form" class="form-inline search-bar">
+            <div class="form-group d-flex align-items-center">
+              <label for="search_type" class="mr-2 text-white">Search by:</label>
+              <select class="form-control form-control-sm mr-2" id="search_type" name="search_type" onchange="updateFormAction()">
+                <option value="cart">Cart Items by User ID</option>
+                <option value="products">Top k Most Expensive Products</option>
+                <option value="feedback">Feedback by User ID</option>
+                <option value="seller">Products by Seller ID</option>
+              </select>
+              <input type="text" class="form-control form-control-sm" id="search_input" name="search_input" placeholder="Enter value" style="max-width: 500px;">
+              <button type="submit" class="btn btn-primary ml-2">Search</button>
+            </div>
+          </form>
+        </div>
+      </li>
+    </ul>
     <ul class="navbar-nav ml-auto">
       {% if current_user.is_authenticated %}
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Hello, {{current_user.firstname}}
@@ -79,5 +112,39 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+  <script>
+    function updateFormAction() {
+      const form = document.getElementById('combined-search-form');
+      const searchType = document.getElementById('search_type').value;
+      const searchInput = document.getElementById('search_input');
+
+      switch (searchType) {
+        case 'cart':
+          form.action = "{{ url_for('cart.view_cart') }}";
+          searchInput.name = "user_id";
+          searchInput.placeholder = "Enter User ID";
+          break;
+        case 'products':
+          form.action = "{{ url_for('productSearch.search_products') }}";
+          searchInput.name = "top_k_expensive";
+          searchInput.placeholder = "Enter integer k>=0, (or leave blank for all)";
+          break;
+        case 'feedback':
+          form.action = "{{ url_for('feedbackSearch.search_feedback') }}";
+          searchInput.name = "user_id";
+          searchInput.placeholder = "Enter User ID";
+          break;
+        case 'seller':
+          form.action = "{{ url_for('sellerSearch.search_sellers') }}";
+          searchInput.name = "seller_id";
+          searchInput.placeholder = "Enter Seller ID";
+          break;
+      }
+    }
+
+    // Initialize the form action on page load
+    document.addEventListener('DOMContentLoaded', updateFormAction);
+  </script>
+
 </body>
 </html>

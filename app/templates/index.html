@@ -8,67 +8,53 @@
 
 <br><br>
 {% if not current_user.is_authenticated %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to get started</p>
+  <div class="card text-center" style="max-width: 500px; margin: auto;">
+    <div class="card-body">
+      <h5 class="card-title">Get Started</h5>
+      <p class="card-text">Please <a href="{{ url_for('users.login') }}" class="btn btn-primary">Log in</a> to access more features.</p>
+    </div>
+  </div>
 {% endif %}
 
-
-
 <br><br>
-<!-- <h2>Products for sale:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in avail_products%}
-      <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.price}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table> -->
+<div class="container">
+  <div class="featured-products text-center">
+    <h2>Featured Products</h2>
+    
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <div class="product-card">
+          <div class="product-image-placeholder"></div>
+          <h4>Product Name 1</h4>
+          <p>$price placeholder</p>
+        </div>
+      </div>
 
+      <div class="col-md-3 mb-3">
+        <div class="product-card">
+          <div class="product-image-placeholder"></div>
+          <h4>Product Name 2</h4>
+          <p>$price placeholder</p>
+        </div>
+      </div>
 
-<form action="{{ url_for('productSearch.search_products') }}" method="get">
-  <div class="top-k-container">
-    <div class="filter-text">Search top k most expensive products: </div>
-    <input type="text" class="top-k-input" id="top_k_expensive" name="top_k_expensive" placeholder="Enter integer k>=0, (or leave blank for all)">
-    <button type="submit" class="btn btn-primary btn-sm">filter</button>
+      <div class="col-md-3 mb-3">
+        <div class="product-card">
+          <div class="product-image-placeholder"></div>
+          <h4>Product Name 3</h4>
+          <p>$ price placeholder</p>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <div class="product-card">
+          <div class="product-image-placeholder"></div>
+          <h4>Product Name 4</h4>
+          <p>$price placeholder</p>
+        </div>
+      </div>
+    </div>
   </div>
-</form>  
-
-
-<form action="{{ url_for('cart.view_cart') }}" method="get">
-  <div class="form-group">
-      <label for="user_id" style="color:black">Search Cart Items by User ID:</label>
-      <input type="text" class="form-control" id="user_id" name="user_id" placeholder="Enter User ID">
-      <button type="submit" class="btn btn-primary mt-2">Search</button>
-  </div>
-</form>
-
-<form action="{{ url_for('feedbackSearch.search_feedback') }}" method="get">
-  <div class="form-group">
-      <label for="user_id_feedback" style="color:black">Search Feedback by User ID:</label>
-      <input type="text" class="form-control" id="user_id_feedback" name="user_id" placeholder="Enter User ID">
-      <button type="submit" class="btn btn-primary mt-2">Search</button>
-  </div>
-</form>
-
-
-<form action="{{ url_for('sellerSearch.search_sellers') }}" method="get">
-  <div class="form-group">
-      <label for="seller_id" style="color:black">Search Products by Seller ID:</label>
-      <input type="text" class="form-control" id="seller_id" name="seller_id" placeholder="Enter Seller ID">
-      <button type="submit" class="btn btn-primary mt-2">Search</button>
-  </div>
-</form>
-
+</div>
 
 {% endblock %}
-
