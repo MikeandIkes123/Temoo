@@ -76,7 +76,8 @@
               <select class="form-control form-control-sm mr-2" id="search_type" name="search_type" onchange="updateFormAction()">
                 <option value="cart">Cart Items by User ID</option>
                 <option value="products">Top k Most Expensive Products</option>
-                <option value="feedback">Feedback by User ID</option>
+                <option value="feedback">Reviews by User ID</option>
+                <option value="sfeedback">Sellers' Reviews by User ID</option>
                 <option value="seller">Products by Seller ID</option>
               </select>
               <input type="text" class="form-control form-control-sm" id="search_input" name="search_input" placeholder="Enter value" style="max-width: 500px;">
@@ -134,7 +135,7 @@
           searchInput.placeholder = "Enter User ID";
           break;
         case 'sfeedback':
-          form.action = "{{ url_for('sFeedbackSearch.search_sfeedback') }}";
+          form.action = "{{ url_for('SFeedbackSearch.search_sfeedback') }}";
           searchInput.name = "user_id";
           searchInput.placeholder = "Enter User ID";
           break;

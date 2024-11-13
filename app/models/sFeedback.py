@@ -27,15 +27,15 @@ class SFeedback:
         rows = app.db.execute('''
 SELECT
     sf.id AS "Feedback ID",
-    sf.seller_id AS "Seller ID",
-    s.name AS "Seller Name",
+    sf.sid AS "Seller ID",
+    sf.uid AS "User ID",
     sf.comment AS "Comment",
     sf.rating AS "Rating",
-    sf.feedback_time AS "Feedback Time"
-FROM SellerFeedbacks sf
-JOIN Sellers s ON sf.seller_id = s.id
+    sf.comment_time AS "Feedback Time"
+FROM sFeedbacks sf
+JOIN Sellers s ON sf.sid = s.id
 WHERE sf.uid = :uid
-ORDER BY sf.feedback_time DESC
+ORDER BY sf.comment_time DESC
 LIMIT 5;
 ''',
                               uid=uid)

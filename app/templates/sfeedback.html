@@ -20,14 +20,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for feedback in sfeedback_entries %}
+            {% for feedback in feedback_entries %}
                 <tr>
-                    <th scope="row">{{ sfeedback.id }}</th>
-                    <td>{{ sFeedback.sid }}</td>
-                    <td>{{ sFeedback.uid }}</td>  
-                    <td>{{ sFeedback.comment }}</td>
-                    <td>{{ sFeedback.rating }}</td>
-                    <td>{{ sFeedback.comment_time }}</td>
+                    <th scope="row">{{ feedback.id }}</th>
+                    <td>{{ feedback.sid }}</td>
+                    <td>{{ feedback.uid }}</td>  
+                    <td>{{ feedback.comment }}</td>
+                    <td>{{ feedback.rating }}</td>
+                    <td>{{ feedback.comment_time }}</td>
                 </tr>
             {% endfor %}
         </tbody>

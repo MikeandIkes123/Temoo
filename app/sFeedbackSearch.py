@@ -3,9 +3,9 @@ from flask_login import current_user
 import datetime
 
 from .models.user import User
-from .models.feedback import Feedback
+from .models.sFeedback import SFeedback
 
-bp = Blueprint('sfeedbackSearch', __name__)
+bp = Blueprint('SFeedbackSearch', __name__)
 
 @bp.route('/search_sfeedback', methods=['GET'])
 def search_sfeedback():
@@ -14,7 +14,7 @@ def search_sfeedback():
         return render_template('sfeedback.html', error="No user ID provided")
 
     # want to get 5 most recent feedback entries
-    feedback_entries = Feedback.get_recent_sfeedback(user_id)
+    feedback_entries = SFeedback.get_recent_sfeedback(user_id)
 
     if not feedback_entries:
         return render_template('sfeedback.html', error=f"No reviews found for user ID {user_id}", user_id=user_id)
