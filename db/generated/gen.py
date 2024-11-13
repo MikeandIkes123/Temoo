@@ -11,6 +11,7 @@ num_users = 100
 num_products = 2000
 num_purchases = 2500
 num_feedbacks = 2500
+num_sellers = 5
 
 Faker.seed(0)
 fake = Faker()
@@ -123,8 +124,8 @@ def gen_sellers_and_sells():
     selling_users = random.sample(user_ids, num_sellers)
     
     # create a sellers.csv from users with all the sellers in sample 
-    sellers_df = users_df[users_df.iloc[:,1].isin(selling_users)]
-    sellers_df.to_csv('Sellers.csv', index=False)
+    sellers_df = users_df[users_df.iloc[:,0].isin(selling_users)]
+    sellers_df.to_csv('newSellers.csv', index=False)
     
     random.shuffle(product_ids)
     
@@ -141,8 +142,52 @@ def gen_sellers_and_sells():
 
 
 
+
+def get_user_ids():
+    user_ids = set()
+    with open('Users.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)  
+        for row in reader:
+            user_ids.add(row[0])  
+    return user_ids
+
+def gen_sfeedbacks(num_feedbacks, num_sellers):
+    with open('Sellers.csv', 'r') as f:
+        sellers = list(csv.reader(f))
+    
+    user_ids = get_user_ids() 
+    feedback_combinations = set()  
+    feedbacks_written = 0
+    
+    with open('SellerFeedbacks.csv', 'w', newline='') as f:
+        writer = get_csv_writer(f)
+        print('Seller Feedbacks...', end=' ', flush=True)
+        
+        while feedbacks_written < num_feedbacks:
+            seller = fake.random_element(elements=sellers)
+            sid = seller[0]  
+            uid = fake.random_element(elements=user_ids)  
+            
+            if (uid, sid) in feedback_combinations:
+                continue 
+            
+            feedback_combinations.add((uid, sid))
+            feedback_id = feedbacks_written
+            comment = fake.sentence()
+            rating = fake.random_int(min=1, max=5)
+            feedback_time = fake.date_time_this_decade(before_now=True, after_now=False)
+            
+            writer.writerow([feedback_id, sid, uid, comment, rating, feedback_time.strftime('%Y-%m-%d %H:%M:%S')])
+            feedbacks_written += 1
+            if feedbacks_written % 100 == 0:
+                print(f'{feedbacks_written}', end=' ', flush=True)
+        
+        print(f'{feedbacks_written} generated.')
+
 # gen_users(num_users)
 # available_pids = gen_products(num_products)
 # gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
-gen_sellers_and_sells()
+# gen_sellers_and_sells()
+gen_sfeedbacks(400, num_sellers)
