@@ -133,6 +133,11 @@
           searchInput.name = "user_id";
           searchInput.placeholder = "Enter User ID";
           break;
+        case 'sfeedback':
+          form.action = "{{ url_for('sFeedbackSearch.search_sfeedback') }}";
+          searchInput.name = "user_id";
+          searchInput.placeholder = "Enter User ID";
+          break;
         case 'seller':
           form.action = "{{ url_for('sellerSearch.search_sellers') }}";
           searchInput.name = "seller_id";

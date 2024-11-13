@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Seller Reviews Written By User ID: {{ user_id }}</h2>
+
+{% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+{% else %}
+    <table class='table table-hover table-bordered container'>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Seller Review ID</th>
+                <th scope="col">Seller ID</th>
+                <th scope="col">User ID</th>
+                <th scope="col">Review</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Time Review Written</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feedback in sfeedback_entries %}
+                <tr>
+                    <th scope="row">{{ sfeedback.id }}</th>
+                    <td>{{ sFeedback.sid }}</td>
+                    <td>{{ sFeedback.uid }}</td>  
+                    <td>{{ sFeedback.comment }}</td>
+                    <td>{{ sFeedback.rating }}</td>
+                    <td>{{ sFeedback.comment_time }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
