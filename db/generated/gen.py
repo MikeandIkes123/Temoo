@@ -185,9 +185,26 @@ def gen_sfeedbacks(num_feedbacks, num_sellers):
         
         print(f'{feedbacks_written} generated.')
 
+def gen_cart_data(num_cart_entries, available_pids):
+    with open('Cart.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Cart data...', end=' ', flush=True)
+        for entry_id in range(num_cart_entries):
+            if entry_id % 100 == 0:
+                print(f'{entry_id}', end=' ', flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)  # Random user ID
+            pid = fake.random_element(elements=available_pids)  # Random product ID from available products
+            quantity = fake.random_int(min=1, max=10)  # Random quantity between 1 and 10
+            writer.writerow([uid, pid, quantity])
+        print(f'{num_cart_entries} cart entries generated')
+    return
+
+
 # gen_users(num_users)
-# available_pids = gen_products(num_products)
+available_pids = gen_products(num_products)
 # gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
 # gen_sellers_and_sells()
 gen_sfeedbacks(400, num_sellers)
+num_cart_entries = 500  # Adjust as needed
+gen_cart_data(num_cart_entries, available_pids)

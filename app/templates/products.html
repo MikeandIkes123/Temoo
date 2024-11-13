@@ -67,7 +67,27 @@
       background-color: #007bff;
       color: white;
     }
-</style>
+
+    .quantity-controls {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .quantity-controls button {
+      padding: 5px;
+      font-size: 1.2em;
+    }
+
+    .add-to-cart {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .add-to-cart button {
+      padding: 5px 10px;
+      font-size: 1em;
+    }
+  </style>
 </head>
 
 <h2>Products for sale:</h2>
@@ -82,127 +102,151 @@
         <th onclick="sortAlphaTable(3)" scope="col">Main Category</th>
         <th onclick="sortNumericTable(4)" scope="col">Ratings</th>
         <th scope="col">Image</th>
+        <th scope="col">Quantity</th>
       </tr>
     </thead>
     <tbody>
-      {% for product in products%}
-        <tr>
-          <th scope="row">{{product.id}}</th>
-          <td>{{product.name}}</td>
-          <td>{{product.price}}</td>
-          <td>{{product.description}}</td>
-          <td>{{product.main_category}}</td>
-          <td>{{product.ratings}}</td>
+      {% for product in products %}
+        <tr data-product-id="{{ product.id }}">
+          <th scope="row">{{ product.id }}</th>
+          <td>{{ product.name }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.main_category }}</td>
+          <td>{{ product.ratings }}</td>
           <td>
-            <img src={{product.image_url}}
-                         alt="">
+            <img src="{{ product.image_url }}" alt="">
           </td>
-          
+          <td class="quantity-controls">
+            <button type="button" class="increase-quantity">+</button>
+            <span class="quantity-display">1</span>
+            <button type="button" class="decrease-quantity">-</button>
+          </td>
+          <td class="add-to-cart">
+            <!-- Form for adding product to cart -->
+            <form method="POST" action="{{ url_for('cart.add_to_cart') }}">
+              <!-- Product ID -->
+              <input type="hidden" name="product_id" value="{{ product.id }}">
+              <!-- Quantity Input (hidden) -->
+              <input type="hidden" name="quantity" class="quantity-input" value="1">
+              <!-- Submit Button -->
+              <button type="submit">Add to Cart</button>
+            </form>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 </article>
+
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Event listeners for quantity adjustments
+    document.querySelectorAll('.increase-quantity').forEach(button => {
+      button.addEventListener('click', function () {
+        const row = this.closest('tr');
+        const quantityDisplay = row.querySelector('.quantity-display');
+        const quantityInput = row.querySelector('.quantity-input');
+        let quantity = parseInt(quantityInput.value);
+        quantity += 1;
+        quantityInput.value = quantity;
+        quantityDisplay.textContent = quantity;
+      });
+    });
+
+    document.querySelectorAll('.decrease-quantity').forEach(button => {
+      button.addEventListener('click', function () {
+        const row = this.closest('tr');
+        const quantityDisplay = row.querySelector('.quantity-display');
+        const quantityInput = row.querySelector('.quantity-input');
+        let quantity = parseInt(quantityInput.value);
+        if (quantity > 1) {
+          quantity -= 1;
+          quantityInput.value = quantity;
+          quantityDisplay.textContent = quantity;
+        }
+      });
+    });
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
     const content = document.querySelector('.content'); 
     const itemsPerPage = 5;
     let currentPage = 0;
     const items = Array.from(content.getElementsByTagName('tr')).slice(1);
 
-  function showPage(page) {
-    const startIndex = page * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    items.forEach((item, index) => {
-      item.classList.toggle('hidden', index < startIndex || index >= endIndex);
-    });
-    updateActiveButtonStates();
-  }
-
-  function createPageButtons() {
-    const totalPages = Math.ceil(items.length / itemsPerPage);
-    const paginationContainer = document.createElement('div');
-    const paginationDiv = document.body.appendChild(paginationContainer);
-    paginationContainer.classList.add('pagination');
-
-    // Add page buttons
-    for (let i = 0; i < totalPages; i++) {
-      const pageButton = document.createElement('button');
-      pageButton.textContent = i + 1;
-      pageButton.addEventListener('click', () => {
-        currentPage = i;
-        showPage(currentPage);
-        updateActiveButtonStates();
+    function showPage(page) {
+      const startIndex = page * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      items.forEach((item, index) => {
+        item.classList.toggle('hidden', index < startIndex || index >= endIndex);
       });
+      updateActiveButtonStates();
+    }
 
-        content.appendChild(paginationContainer);
-        paginationDiv.appendChild(pageButton);
+    function createPageButtons() {
+      const totalPages = Math.ceil(items.length / itemsPerPage);
+      const paginationContainer = document.createElement('div');
+      paginationContainer.classList.add('pagination');
+
+      for (let i = 0; i < totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i + 1;
+        pageButton.addEventListener('click', () => {
+          currentPage = i;
+          showPage(currentPage);
+          updateActiveButtonStates();
+        });
+        paginationContainer.appendChild(pageButton);
       }
-  }
 
-  function updateActiveButtonStates() {
-    const pageButtons = document.querySelectorAll('.pagination button');
-    pageButtons.forEach((button, index) => {
-      if (index === currentPage) {
-        button.classList.add('active');
-      } else {
-        button.classList.remove('active');
-      }
-    });
-  }
+      content.appendChild(paginationContainer);
+    }
 
-    createPageButtons(); // Call this function to create the page buttons initially
+    function updateActiveButtonStates() {
+      const pageButtons = document.querySelectorAll('.pagination button');
+      pageButtons.forEach((button, index) => {
+        if (index === currentPage) {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+    }
+
+    createPageButtons();
     showPage(currentPage);
   });
-</script>
-<script>
+
   function sortAlphaTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("productsTable");
     switching = true;
-    //Set the sorting direction to ascending:
     dir = "asc"; 
-    /*Make a loop that will continue until
-    no switching has been done:*/
     while (switching) {
-      //start by saying: no switching is done:
       switching = false;
       rows = table.rows;
-      /*Loop through all table rows (except the
-      first, which contains table headers):*/
       for (i = 1; i < (rows.length - 1); i++) {
-        //start by saying there should be no switching:
         shouldSwitch = false;
-        /*Get the two elements you want to compare,
-        one from current row and one from the next:*/
         x = rows[i].getElementsByTagName("TD")[n];
         y = rows[i + 1].getElementsByTagName("TD")[n];
-        /*check if the two rows should switch place,
-        based on the direction, asc or desc:*/
         if (dir == "asc") {
           if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch= true;
+            shouldSwitch = true;
             break;
           }
         } else if (dir == "desc") {
           if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-            //if so, mark as a switch and break the loop:
             shouldSwitch = true;
             break;
           }
         }
       }
       if (shouldSwitch) {
-        /*If a switch has been marked, make the switch
-        and mark that a switch has been done:*/
         rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
         switching = true;
-        //Each time a switch is done, increase this count by 1:
-        switchcount ++;      
+        switchcount++;      
       } else {
-        /*If no switching has been done AND the direction is "asc",
-        set the direction to "desc" and run the while loop again.*/
         if (switchcount == 0 && dir == "asc") {
           dir = "desc";
           switching = true;
@@ -210,53 +254,36 @@
       }
     }
   }
+
   function sortNumericTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("productsTable");
     switching = true;
-    //Set the sorting direction to ascending:
     dir = "asc"; 
-    /*Make a loop that will continue until
-    no switching has been done:*/
     while (switching) {
-      //start by saying: no switching is done:
       switching = false;
       rows = table.rows;
-      /*Loop through all table rows (except the
-      first, which contains table headers):*/
       for (i = 1; i < (rows.length - 1); i++) {
-        //start by saying there should be no switching:
         shouldSwitch = false;
-        /*Get the two elements you want to compare,
-        one from current row and one from the next:*/
         x = rows[i].getElementsByTagName("TD")[n];
         y = rows[i + 1].getElementsByTagName("TD")[n];
-        /*check if the two rows should switch place,
-        based on the direction, asc or desc:*/
         if (dir == "asc") {
           if (Number(x.innerHTML) > Number(y.innerHTML)) {
-            //if so, mark as a switch and break the loop:
-            shouldSwitch= true;
+            shouldSwitch = true;
             break;
           }
         } else if (dir == "desc") {
           if (Number(x.innerHTML) < Number(y.innerHTML)) {
-            //if so, mark as a switch and break the loop:
             shouldSwitch = true;
             break;
           }
         }
       }
       if (shouldSwitch) {
-        /*If a switch has been marked, make the switch
-        and mark that a switch has been done:*/
         rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
         switching = true;
-        //Each time a switch is done, increase this count by 1:
-        switchcount ++;      
+        switchcount++;      
       } else {
-        /*If no switching has been done AND the direction is "asc",
-        set the direction to "desc" and run the while loop again.*/
         if (switchcount == 0 && dir == "asc") {
           dir = "desc";
           switching = true;
@@ -264,6 +291,5 @@
       }
     }
   }
-  </script>
-
+</script>
 {% endblock %}

@@ -5,7 +5,15 @@
   <link rel="stylesheet" href="../static/css/cart.css">
 </head>
 
-<h2>Your Cart:</h2>
+<!-- Dynamically change the heading based on user_id -->
+<h2>
+  {% if user_id == current_user.id %}
+    Your Cart:
+  {% else %}
+    This Person's Cart (User ID: {{ user_id }}):
+  {% endif %}
+</h2>
+
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -23,7 +31,7 @@
       {% endfor %}
     {% else %}
       <tr>
-        <td colspan="3">Your cart is empty.</td>
+        <td colspan="3">The cart is empty.</td>
       </tr>
     {% endif %}
   </tbody>

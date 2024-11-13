@@ -1,48 +1,29 @@
-from flask import Blueprint, render_template, request
-from flask_login import current_user
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import current_user # type: ignore
 from .models.cart import Cart
 bp = Blueprint('cart', __name__)
 
 
-@bp.route('/cart', methods=['GET'])
+@bp.route('/view_cart', methods=['GET'])
 def view_cart():
-    user_id = request.args.get('user_id')
-    
-    if not user_id:
-        return render_template('cart.html', error="No user ID provided")
+    # Get user_id from the query parameter, if available, otherwise use current_user
+    user_id = request.args.get('user_id', default=current_user.id, type=int)
 
-    # Get the cart items for the specified user ID
-    cart_items = Cart.get_cart_items(user_id)  # Implement this method in your Cart model
+    # Fetch the cart items for the user
+    cart_items = Cart.get_cart_items(user_id)
 
-    if not cart_items:
-        return render_template('cart.html', error=f"No items found in the cart for user ID {user_id}")
-
+    # Pass the cart items to the template
     return render_template('cart.html', cart_items=cart_items, user_id=user_id)
 
-# def view_cart():
-#     # if current_user.is_authenticated:
-#     cart_items = Cart.get_cart_items()
-#     return render_template('cart.html', cart_items=cart_items)
-#     # else:
-#     #     return render_template('cart.html', cart_items=[], error="Please log in to view your cart.")
 
+@bp.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    product_id = request.form.get('product_id')
+    quantity = request.form.get('quantity', 1)  # Default quantity to 1 if not specified
+    user_id = current_user.id  # Assuming user is logged in and current_user is available
 
-# def add_to_cart():
-#     if not current_user.is_authenticated:
-#         flash("You need to be logged in to add items to your cart!", "danger")
-#         return redirect(url_for('users.login'))
+    # Logic to add the product to the cart
+    Cart.add_item(user_id, product_id, quantity)  # Implement this method in Cart model
 
-#     pid = request.form.get('pid')  # Product ID
-#     quantity = request.form.get('quantity')  # Quantity
-
-#     # Insert the item into the Cart table
-#     app.db.execute('''
-#         INSERT INTO Cart (user_id, pid, quantity) VALUES (:user_id, :pid, :quantity)
-#     ''', {
-#         'user_id': current_user.id,
-#         'pid': pid,
-#         'quantity': quantity
-#     })
-
-#     flash("Item added to cart successfully!", "success")
-#     return redirect(url_for('index.index'))  # Redirect to home or desired page
+    # Redirect to view_cart with user_id as a query parameter
+    return redirect(url_for('cart.view_cart', user_id=user_id))
