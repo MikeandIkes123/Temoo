@@ -123,8 +123,8 @@ def gen_sellers_and_sells():
     selling_users = random.sample(user_ids, num_sellers)
     
     # create a sellers.csv from users with all the sellers in sample 
-    sellers_df = users_df[users_df.iloc[:,1].isin(selling_users)]
-    sellers_df.to_csv('Sellers.csv', index=False)
+    sellers_df = users_df[users_df.iloc[:,0].isin(selling_users)]
+    sellers_df.to_csv('newSellers.csv', index=False)
     
     random.shuffle(product_ids)
     
