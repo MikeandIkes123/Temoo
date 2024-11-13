@@ -46,7 +46,6 @@ CREATE TABLE Feedbacks (
     uid INT NOT NULL REFERENCES Users(id), 
     pid INT NOT NULL REFERENCES Products(id),
     comment TEXT NOT NULL,
-    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment_time timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
 
