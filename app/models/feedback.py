@@ -13,12 +13,13 @@ Also add:
 from flask import current_app as app
 
 class Feedback:
-    def __init__(self, id, pid, product_name, comment, comment_time):
+    def __init__(self, id, pid, product_name, comment, rating, comment_time):
         self.id = id
         # self.uid = uid
         self.pid = pid
         self.product_name = product_name
         self.comment = comment
+        self.rating = rating
         self.comment_time = comment_time
 
 #     @staticmethod
@@ -40,6 +41,7 @@ SELECT
     f.pid AS "Product ID", 
     p.name AS "Product Name", 
     f.comment AS "Comment", 
+    f.rating AS "Rating",
     f.comment_time AS "Feedback Time"
 FROM Feedbacks f
 JOIN Products p ON f.pid = p.id

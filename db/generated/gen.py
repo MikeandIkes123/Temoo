@@ -83,7 +83,7 @@ def gen_feedbacks(num_feedbacks, num_products=62323):
         while feedbacks_written < num_feedbacks:
             purchase = fake.random_element(elements=purchases)
             uid = purchase[1]  
-            pid = fake.random_int(min=1, max=num_products)  # simulate a product ID within range
+            pid = fake.random_int(min=1, max=num_products)  # simulate product ID within range for now, use Amazon later
 
             # i want to make sure unique review per product per user
             if (uid, pid) in feedback_combinations:
