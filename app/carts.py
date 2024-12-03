@@ -12,10 +12,9 @@ def view_cart():
  
     # Fetch the cart items for the user
     cart_items = Cart.get_cart_items(user_id)
-
+    total_price = Cart.get_total_price(user_id)  # Get the total price of the cart
     # Pass the cart items to the template
-    return render_template('cart.html', cart_items=cart_items, user_id=user_id)
-
+    return render_template('cart.html', cart_items=cart_items, user_id=user_id, total_price=total_price)
 
 @bp.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
@@ -27,4 +26,23 @@ def add_to_cart():
     Cart.add_item(user_id, product_id, quantity)  # Implement this method in Cart model
 
     # Redirect to view_cart with user_id as a query parameter
+    return redirect(url_for('cart.view_cart', user_id=user_id))
+
+@bp.route('/update_cart', methods=['POST'])
+def update_cart():
+    product_id = request.form.get('product_id')
+    quantity = int(request.form.get('quantity', 0))
+    user_id = current_user.id
+
+    if quantity > 0:
+        Cart.update_item(user_id, product_id, quantity)  # Updates the quantity
+    else:
+        Cart.remove_item(user_id, product_id)  # Removes the item if quantity is 0
+
+    return redirect(url_for('cart.view_cart', user_id=user_id))
+
+@bp.route('/clear_cart', methods=['POST'])
+def clear_cart():
+    user_id = current_user.id  # Ensure it only clears the current user's cart
+    Cart.clear_cart(user_id)
     return redirect(url_for('cart.view_cart', user_id=user_id))

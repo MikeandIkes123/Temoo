@@ -185,27 +185,36 @@ def gen_sfeedbacks(num_feedbacks, num_sellers):
         
         print(f'{feedbacks_written} generated.')
 
-def gen_cart_data(num_cart_entries, available_pids):
-    with open('Cart.csv', 'w') as f:
+def get_csv_writer(file_handle):
+    # Configure the CSV writer to avoid quoting non-string values
+    return csv.writer(file_handle, quoting=csv.QUOTE_MINIMAL)
+def gen_cart_data(num_cart_entries, num_products, num_users):
+    with open('Cart.csv', 'w', newline='') as f:
         writer = get_csv_writer(f)
         print('Cart data...', end=' ', flush=True)
+        
+        my_set = set()  # Use an empty set for uniqueness
+        product_ids = range(num_products)  # Create a range of product IDs (0 to num_products - 1)
+        
         for entry_id in range(num_cart_entries):
-            if entry_id % 100 == 0:
-                print(f'{entry_id}', end=' ', flush=True)
-            cid = entry_id
-            uid = fake.random_int(min=0, max=num_users-1)  # Random user ID
-            pid = fake.random_element(elements=available_pids)  # Random product ID from available products
-            quantity = fake.random_int(min=1, max=10)  # Random quantity between 1 and 10
-            writer.writerow([cid, uid, pid, quantity])
-        print(f'{num_cart_entries} cart entries generated')
-    return
+            uid = fake.random_int(min=0, max=num_users - 1)
+            pid = fake.random_element(elements=product_ids)  # Random product ID from the iterable
+
+            if (uid, pid) not in my_set:
+                my_set.add((uid, pid))
+                quantity = fake.random_int(min=1, max=10)  # Random quantity between 1 and 10
+                writer.writerow([uid, pid, quantity])
+        
+        print(f'{len(my_set)} cart entries generated')  # Use `len(my_set)` to reflect actual unique entries
+
 
 
 # gen_users(num_users)
-# available_pids = gen_products(num_products)
 # gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
 # gen_sellers_and_sells()
+
+
 # gen_sfeedbacks(400, num_sellers)
 num_cart_entries = 500  # Adjust as needed
-gen_cart_data(num_cart_entries, range(254855)) # FIXME - find actual length of database
+gen_cart_data(num_cart_entries, num_products, num_users)
