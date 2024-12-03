@@ -8,7 +8,10 @@ import math
 
 
 num_users = 100
+
 num_products = 2000
+available_pids = num_products
+
 num_purchases = 2500
 num_feedbacks = 2500
 num_sellers = 5
@@ -61,6 +64,11 @@ def gen_products(num_products):
 
 
 def gen_purchases(num_purchases, available_pids):
+    df = pd.read_csv('Sells.csv', header=None)
+    df.columns = ["sid", "pid", "quantity"]
+
+    prev_tuples = set([])
+    
     with open('Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Purchases...', end=' ', flush=True)
@@ -68,9 +76,16 @@ def gen_purchases(num_purchases, available_pids):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
-            pid = fake.random_element(elements=available_pids)
+        
+            row = df.sample(n=1)
+            sid, pid = int(row["sid"].iloc[0]), int(row["pid"].iloc[0])
+            quantity = random.randint(1, row["quantity"].iloc[0]-1)
+            
             time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, time_purchased])
+            
+            if (uid, pid, sid, time_purchased) not in prev_tuples:
+                prev_tuples.add((uid, pid, sid, time_purchased)) 
+                writer.writerow([id, uid, pid, sid, time_purchased, quantity])
         print(f'{num_purchases} generated')
     return
 
@@ -207,11 +222,11 @@ def gen_cart_data(num_cart_entries, num_products, num_users):
 
 
 # gen_users(num_users)
-# gen_purchases(num_purchases, available_pids)
+gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
-gen_sellers_and_sells()
+# gen_sellers_and_sells()
 
 
-gen_sfeedbacks(400, num_sellers)
+# gen_sfeedbacks(400, num_sellers)
 # num_cart_entries = 500  # Adjust as needed
 # gen_cart_data(num_cart_entries, num_products, num_users)

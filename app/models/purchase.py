@@ -11,7 +11,7 @@ class Purchase:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT id, uid, pid, sid, time_purchased, quantity
 FROM Purchases
 WHERE id = :id
 ''',
@@ -21,7 +21,7 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT id, uid, pid, sid, time_purchased, quantity
 FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
@@ -34,7 +34,7 @@ ORDER BY time_purchased DESC
     @staticmethod
     def get_all_by_uid(uid):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT id, uid, pid, sid, time_purchased, quantity
 FROM Purchases
 WHERE uid = :uid
 ORDER BY time_purchased DESC
