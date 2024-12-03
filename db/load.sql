@@ -32,6 +32,6 @@ SELECT pg_catalog.setval('public.feedbacks_id_seq',
 
 \COPY Sellers FROM 'Sellers.csv' WITH DELIMITER ',' NULL '' CSV
 
-\COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV;
+\COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
 
 \COPY sFeedbacks FROM 'SellerFeedbacks.csv' WITH DELIMITER ',' NULL '' CSV
