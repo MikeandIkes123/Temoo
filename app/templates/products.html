@@ -5,7 +5,8 @@
 <head>
   <link rel="stylesheet" href="../static/css/products.css">
   <style>
-    img {
+    /* FIXME: It's possible this is what is causing the Temoo logo to shrink on base*/
+    .product_img {
         height: 40px;
         width: 50px;
     }
@@ -115,7 +116,7 @@
           <td>{{ product.main_category }}</td>
           <td>{{ product.ratings }}</td>
           <td>
-            <img src="{{ product.image_url }}" alt="">
+            <img class ="product_img" src="{{ product.image_url }}" alt="">
           </td>
           <td class="quantity-controls">
             <button type="button" class="increase-quantity">+</button>

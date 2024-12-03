@@ -7,8 +7,9 @@ bp = Blueprint('cart', __name__)
 @bp.route('/view_cart', methods=['GET'])
 def view_cart():
     # Get user_id from the query parameter, if available, otherwise use current_user
+    #FIXME: doesn't work unless person is logged in :( -> change default behavior 
     user_id = request.args.get('user_id', default=current_user.id, type=int)
-
+ 
     # Fetch the cart items for the user
     cart_items = Cart.get_cart_items(user_id)
 

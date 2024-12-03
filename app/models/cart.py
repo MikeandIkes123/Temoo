@@ -19,9 +19,9 @@ class Cart:
     @staticmethod
     def add_item(user_id, product_id, quantity):
         query = '''
-            INSERT INTO Cart (uid, pid, quantity)
-            VALUES (:user_id, :product_id, :quantity)
-            ON CONFLICT (uid, pid) DO UPDATE 
+            INSERT INTO Cart (cid, uid, pid, quantity)
+            VALUES (::user_id, :product_id, :quantity)
+            ON CONFLICT (cid, uid, pid) DO UPDATE 
             SET quantity = Cart.quantity + :quantity
         '''
         app.db.execute(query, user_id=user_id, product_id=product_id, quantity=quantity)
