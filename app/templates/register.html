@@ -48,6 +48,10 @@
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
+  <p>
+    {{ form.is_seller.label }}<br>
+    {{ form.is_seller() }}
+  </p>
   <p>{{ form.submit() }}</p>
 </form>
 

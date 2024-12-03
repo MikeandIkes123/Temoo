@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Public View of {{ user.firstname }} {{ user.lastname }}</h2>
+
+{% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+{% else %}
+    <p><strong>UID:</strong> {{ user.id }}</p>
+    <p><strong>Seller Status:</strong>
+        {% if is_seller %}
+            User is a seller.
+        {% else %}
+            User is not a seller.
+        {% endif %}
+    </p>
+
+    {% if is_seller %}
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Address:</strong> {{ user.address }}</p>
+        <h3>Seller Reviews</h3>
+        {% if seller_reviews %}
+            <table class='table table-hover table-bordered container'>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Review ID</th>
+                        <th scope="col">Seller ID</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">Review</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Review Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in seller_reviews %}
+                        <tr>
+                            <th scope="row">{{ review.id }}</th>
+                            <td>{{ review.sid }}</td>
+                            <td>{{ review.uid }}</td>
+                            <td>{{ review.comment }}</td>
+                            <td>{{ review.rating }}</td>
+                            <td>{{ review.comment_time }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No seller reviews found.</p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% endblock %}

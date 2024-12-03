@@ -127,18 +127,30 @@ WHERE id = :id
             print(f"Error retrieving balance for user {id}: {str(e)}")
             return None
 
-
-
-class Seller():
-    def __init__(self, uid, address):
-        self.uid = uid
-        self.address = address
-
-        
-    # TODO: implement seller as an ISA relation with user 
-    # should update User() with register as seller page:
-    # - redirect to second page to fill in address and load inventory 
-    # - add seller to sellers table
-    # - add inventory to products table
+    @staticmethod
+    def is_seller(id):
+        rows = app.db.execute("""
+SELECT id
+FROM Sellers
+WHERE id = :id
+""",
+                              id=id)
+        return len(rows) > 0
     
+    @staticmethod
+    def add_seller(user_id):
+        app.db.execute("""
+                INSERT INTO Sellers(id)
+                VALUES(:user_id)
+                """, user_id=user_id)
     
+    @staticmethod
+    def get_user(id):
+        rows = app.db.execute("""
+            SELECT id, email, address, firstname, lastname, balance
+            FROM Users
+            WHERE id = :id
+        """, id=id)
+        if rows:
+            return rows[0]
+        return None

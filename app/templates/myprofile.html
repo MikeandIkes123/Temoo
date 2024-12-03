@@ -39,10 +39,23 @@
                     </p>
                 </div>
             </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>Seller Status:</strong> 
+                        {% if current_user.is_seller(current_user.id) %}
+                            You are a seller.
+                        {% else %}
+                            You are not a seller. You must declare seller at registration.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
 
             <br/>
             <a href="{{ url_for('myprofile.update_profile') }}" class="btn btn-outline-dark">Edit Profile</a>
             <a href="{{ url_for('myprofile.purchase_history') }}" class="btn btn-outline-dark" role="button">View Purchase History</a>
+            <a href="{{ url_for('myprofile.my_reviews') }}" class="btn btn-outline-dark">View My Reviews</a>
         </div>
     </div>
 </div>
