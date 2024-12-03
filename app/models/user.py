@@ -143,3 +143,14 @@ WHERE id = :id
                 INSERT INTO Sellers(id)
                 VALUES(:user_id)
                 """, user_id=user_id)
+    
+    @staticmethod
+    def get_user(id):
+        rows = app.db.execute("""
+            SELECT id, email, address, firstname, lastname, balance
+            FROM Users
+            WHERE id = :id
+        """, id=id)
+        if rows:
+            return rows[0]
+        return None

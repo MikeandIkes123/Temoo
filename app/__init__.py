@@ -39,4 +39,7 @@ def create_app():
     from .carts import bp as cart_bp
     app.register_blueprint(cart_bp)
 
+    from .publicViewSearch import bp as publicViewSearch_bp
+    app.register_blueprint(publicViewSearch_bp)
+
     return app
