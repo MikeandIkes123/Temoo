@@ -103,7 +103,8 @@
         <th onclick="sortAlphaTable(3)" scope="col">Main Category</th>
         <th onclick="sortNumericTable(4)" scope="col">Ratings</th>
         <th scope="col">Image</th>
-        <th scope="col">Quantity</th>
+        <th scope="col">Items in Stock</th>
+        <th scope="col">Cart Quantity</th>
       </tr>
     </thead>
     <tbody>
@@ -118,6 +119,7 @@
           <td>
             <img class ="product_img" src="{{ product.image_url }}" alt="">
           </td>
+          <td>{{ product.quantity }}</td>
           <td class="quantity-controls">
             <button type="button" class="increase-quantity">+</button>
             <span class="quantity-display">1</span>
