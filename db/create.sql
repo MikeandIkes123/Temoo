@@ -78,3 +78,11 @@ CREATE TABLE sFeedbacks (
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment_time timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
+
+-- CREATE TABLE OrderItems (
+--     id INT NOT NULL PRIMARY KEY,
+--     order_id INT REFERENCES Orders(id),
+--     product_id INT REFERENCES Products(id),
+--     quantity INT,
+--     unit_price DECIMAL(10, 2)
+-- );

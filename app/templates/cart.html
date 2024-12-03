@@ -5,30 +5,53 @@
   <link rel="stylesheet" href="../static/css/cart.css">
 </head>
 
-<!-- Dynamically change the heading based on user_id -->
 <h2>
   {% if user_id == current_user.id %}
     Your Cart:
   {% else %}
-    This Person's Cart (User ID: {{ user_id }}):
+    User ID {{ user_id }}'s Cart:
   {% endif %}
 </h2>
 
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Quantity</th>
+      <th>Product ID</th>
+      <th>Quantity</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     {% if cart_items %}
       {% for item in cart_items %}
         <tr>
-          <th scope="row">{{ item.product_id }}</th>
-          <td>{{ item.quantity }}</td>
+          <td>{{ item.product_id }}</td>
+          <td>
+            {% if user_id == current_user.id %}
+              <form action="{{ url_for('cart.update_cart') }}" method="POST" class="inline-form">
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
+                <input type="hidden" name="product_id" value="{{ item.product_id }}">
+                <button type="submit" class="btn btn-primary">Update</button>
+              </form>
+            {% else %}
+              {{ item.quantity }}
+            {% endif %}
+          </td>
+          <td>
+            {% if user_id == current_user.id %}
+              <form action="{{ url_for('cart.update_cart') }}" method="POST" class="inline-form">
+                <input type="hidden" name="product_id" value="{{ item.product_id }}">
+                <input type="hidden" name="quantity" value="0">
+                <button type="submit" class="btn btn-danger">Remove</button>
+              </form>
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
+      <!-- Display total price -->
+      <tr>
+        <td colspan="3" class="text-right"><strong>Total Price: ${{ total_price }}</strong></td>
+      </tr>
     {% else %}
       <tr>
         <td colspan="3">The cart is empty.</td>
@@ -36,4 +59,19 @@
     {% endif %}
   </tbody>
 </table>
+
+{% if cart_items and user_id == current_user.id %}
+  <form action="{{ url_for('cart.clear_cart') }}" method="POST" id="clear-cart-form">
+    <button type="button" class="btn btn-danger" onclick="confirmClearCart()">Clear Cart</button>
+  </form>
+{% endif %}
+
+<script>
+  function confirmClearCart() {
+    if (confirm("Are you sure you want to clear your entire cart?")) {
+      document.getElementById('clear-cart-form').submit();
+    }
+  }
+</script>
+
 {% endblock %}
