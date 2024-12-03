@@ -124,8 +124,8 @@ def gen_sellers_and_sells():
     selling_users = random.sample(user_ids, num_sellers)
     
     # create a sellers.csv from users with all the sellers in sample 
-    sellers_df = users_df[users_df.iloc[:,0].isin(selling_users)]
-    sellers_df.to_csv('newSellers.csv', index=False)
+    sellers_df = pd.DataFrame(selling_users)
+    sellers_df.to_csv('Sellers.csv', index=False, header=False)
     
     random.shuffle(product_ids)
     
@@ -134,14 +134,11 @@ def gen_sellers_and_sells():
     # for every product, ensure it has only one seller 
     for i, product_id in enumerate(product_ids):
         seller = selling_users[i % num_sellers] # cycle through sellers for uniform ish distribution
-        combinations.append((seller, product_id))
+        combinations.append((seller, product_id, random.randint(7, 20))) # seller, product id, quantity between 7 and 20 
 
     sales_df = pd.DataFrame(combinations) # two columns: sellers, product id they sell 
     
-    sales_df.to_csv('Sells.csv', index=False)
-
-
-
+    sales_df.to_csv('Sells.csv', index=False, header = False)
 
 def get_user_ids():
     user_ids = set()
@@ -212,9 +209,9 @@ def gen_cart_data(num_cart_entries, num_products, num_users):
 # gen_users(num_users)
 # gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
-# gen_sellers_and_sells()
+gen_sellers_and_sells()
 
 
-# gen_sfeedbacks(400, num_sellers)
-num_cart_entries = 500  # Adjust as needed
-gen_cart_data(num_cart_entries, num_products, num_users)
+gen_sfeedbacks(400, num_sellers)
+# num_cart_entries = 500  # Adjust as needed
+# gen_cart_data(num_cart_entries, num_products, num_users)

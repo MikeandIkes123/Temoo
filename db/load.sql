@@ -28,9 +28,9 @@ SELECT pg_catalog.setval('public.feedbacks_id_seq',
                          (SELECT MAX(id)+1 FROM Feedbacks),
                          false);
 
-\COPY Sells FROM 'Sells.csv' WITH DELIMITER ',' NULL '' CSV
-
 \COPY Sellers FROM 'Sellers.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY Sells FROM 'Sells.csv' WITH DELIMITER ',' NULL '' CSV
 
 \COPY Cart FROM 'Cart.csv' WITH DELIMITER ',' NULL '' CSV
 
