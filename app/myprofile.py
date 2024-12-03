@@ -7,6 +7,8 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
 from .models.purchase import Purchase
+from .models.feedback import Feedback
+from .models.sFeedback import SFeedback
 
 from flask import Blueprint
 bp = Blueprint('myprofile', __name__)
@@ -88,3 +90,17 @@ def purchase_history():
         return render_template('purchases.html', error=f"No purchases found for user ID {user_id}", user_id=user_id)
 
     return render_template('purchases.html', purchases=purchases, user_id=user_id)
+
+@bp.route('/my_reviews', methods=['GET'])
+def my_reviews():
+    user_id = current_user.id
+    
+    product_reviews = Feedback.get_all_feedback(user_id)
+    seller_reviews = SFeedback.get_sfeedback(user_id)
+
+    return render_template(
+        'my_reviews.html', 
+        product_reviews=product_reviews, 
+        seller_reviews=seller_reviews, 
+        user_id=user_id)
+

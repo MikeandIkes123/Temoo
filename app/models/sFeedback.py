@@ -40,3 +40,21 @@ LIMIT 5;
 ''',
                               uid=uid)
         return [SFeedback(*row) for row in rows]
+
+    @staticmethod
+    def get_sfeedback(uid):
+        rows = app.db.execute('''
+SELECT
+    sf.id AS "Feedback ID",
+    sf.sid AS "Seller ID",
+    sf.uid AS "User ID",
+    sf.comment AS "Comment",
+    sf.rating AS "Rating",
+    sf.comment_time AS "Feedback Time"
+FROM sFeedbacks sf
+JOIN Sellers s ON sf.sid = s.id
+WHERE sf.uid = :uid
+ORDER BY sf.comment_time DESC;
+''',
+                              uid=uid)
+        return [SFeedback(*row) for row in rows]

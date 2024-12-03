@@ -52,14 +52,19 @@ LIMIT 5;
                               uid=uid)
         return [Feedback(*row) for row in rows]
 
-#     @staticmethod
-#     def get_all_feedback(uid):
-#         rows = app.db.execute('''
-# SELECT f.id, f.uid, f.pid, p.name AS product_name, f.comment, f.comment_time
-# FROM Feedbacks f
-# JOIN Products p ON f.pid = p.id
-# WHERE f.uid = :uid
-# ORDER BY f.comment_time DESC
-# ''',
-#                               uid=uid)
-#         return [Feedback(*row) for row in rows]
+    @staticmethod
+    def get_all_feedback(uid):
+        rows = app.db.execute("""
+SELECT 
+    f.id AS "Feedback ID", 
+    f.pid AS "Product ID", 
+    p.name AS "Product Name", 
+    f.comment AS "Comment", 
+    f.rating AS "Rating",
+    f.comment_time AS "Feedback Time"
+FROM Feedbacks f
+JOIN Products p ON f.pid = p.id
+WHERE f.uid = :uid
+ORDER BY f.comment_time DESC;
+""",                        uid=uid)
+        return [Feedback(*row) for row in rows]

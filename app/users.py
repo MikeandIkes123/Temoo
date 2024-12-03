@@ -47,6 +47,7 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(),
                                        EqualTo('password')])
+    is_seller = BooleanField('Do you want to be a seller?')
     submit = SubmitField('Register')
 
     def validate_email(self, email):
@@ -60,12 +61,15 @@ def register():
         return redirect(url_for('index.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.register(form.email.data,
+        user = User.register(form.email.data,
                          form.password.data,
                          form.firstname.data,
                          form.lastname.data,
                          form.address.data,
-                         balance = 0.0):
+                         balance = 0.0)
+        if user:
+            if form.is_seller.data:
+                User.add_seller(user.id)
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
