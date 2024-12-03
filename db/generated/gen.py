@@ -45,20 +45,39 @@ def gen_users(num_users):
     return
 
 
-def gen_products(num_products):
+def gen_products():
     available_pids = []
+    prod_df = pd.read_csv('Amazon_Products.csv', header=None)
+    prod_df.columns = ["id", "name", "price", "available", "description", "main_category", "sub_category", "ratings", "no_of_ratings", "image_url"]
+    
+    sell_df = pd.read_csv('Sells.csv', header=None)
+    sell_df.columns = ["sid", "pid", "quantity"]
+    
+    prod_quants = sell_df.groupby("pid").agg({"quantity": "sum"})
+    # print(prod_quants.loc[1].values[0])
+    
     with open('Products.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Products...', end=' ', flush=True)
-        for pid in range(num_products):
+        for pid in range(len(prod_df)):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
-            name = fake.sentence(nb_words=4)[:-1]
-            price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
-            available = fake.random_element(elements=('true', 'false'))
-            if available == 'true':
-                available_pids.append(pid)
-            writer.writerow([pid, name, price, available])
+            
+            name = prod_df["name"].iloc[pid]
+            price = prod_df["price"].iloc[pid]
+            if pid in prod_quants.index:
+                quantity = prod_quants.loc[pid].values[0]
+            else:
+                quantity = 0
+            description = prod_df["description"].iloc[pid]
+            main_category = prod_df["main_category"].iloc[pid]
+            sub_category = prod_df["sub_category"].iloc[pid]
+            ratings = prod_df["ratings"].iloc[pid]
+            no_of_ratings = prod_df["no_of_ratings"].iloc[pid]
+            image_url = prod_df["image_url"].iloc[pid]
+            
+            writer.writerow([pid, name, price, quantity, description, main_category, sub_category, ratings, no_of_ratings, image_url])
+            
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
@@ -222,9 +241,10 @@ def gen_cart_data(num_cart_entries, num_products, num_users):
 
 
 # gen_users(num_users)
-gen_purchases(num_purchases, available_pids)
+# gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
 # gen_sellers_and_sells()
+# gen_products()
 
 
 # gen_sfeedbacks(400, num_sellers)

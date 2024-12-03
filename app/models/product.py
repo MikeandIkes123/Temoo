@@ -2,11 +2,11 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, name, price, available, description="", main_category="", sub_category="", ratings="", no_of_ratings="", image_url=""):
+    def __init__(self, id, name, price, quantity, description="", main_category="", sub_category="", ratings="", no_of_ratings="", image_url=""):
         self.id = id
         self.name = name
         self.price = price
-        self.available = available
+        self.quantity = quantity
         self.description = description
         self.main_category = main_category
         self.sub_category = sub_category
@@ -41,7 +41,7 @@ WHERE id = :id
         rows = app.db.execute('''
 SELECT *
 FROM Products
-WHERE available = :available
+WHERE quantity > 0
 ''',
                               available=available)
         return [Product(*row) for row in rows]
@@ -52,14 +52,14 @@ WHERE available = :available
             query = '''
                     SELECT * 
                     FROM Products
-                    WHERE available = True
+                    WHERE quantity > 0
                     ORDER BY price DESC
                     '''
         else:
             query = '''
                     SELECT * 
                     FROM Products
-                    WHERE available = True
+                    WHERE quantity > 0
                     ORDER BY price DESC
                     LIMIT :k
                     '''
