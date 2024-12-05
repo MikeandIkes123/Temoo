@@ -52,6 +52,12 @@
       <tr>
         <td colspan="3" class="text-right"><strong>Total Price: ${{ total_price }}</strong></td>
       </tr>
+      {% if cart_items and user_id == current_user.id %}
+        <form action="{{ url_for('cart.submit_cart') }}" method="POST" id="submit-cart-form">
+            <button type="button" class="btn btn-success" onclick="confirmSubmitCart()">Submit Order</button>
+        </form>
+      {% endif %}
+
     {% else %}
       <tr>
         <td colspan="3">The cart is empty.</td>
@@ -70,6 +76,14 @@
   function confirmClearCart() {
     if (confirm("Are you sure you want to clear your entire cart?")) {
       document.getElementById('clear-cart-form').submit();
+    }
+  }
+</script>
+
+<script>
+  function confirmSubmitCart() {
+    if (confirm("Are you sure you want to submit your order?")) {
+      document.getElementById('submit-cart-form').submit();
     }
   }
 </script>

@@ -46,3 +46,16 @@ def clear_cart():
     user_id = current_user.id  # Ensure it only clears the current user's cart
     Cart.clear_cart(user_id)
     return redirect(url_for('cart.view_cart', user_id=user_id))
+
+@bp.route('/submit_cart', methods=['POST'])
+def submit_cart():
+    user_id = current_user.id
+
+    # Check if the cart is empty
+    cart_items = Cart.get_cart_items(user_id)
+    if not cart_items:
+        return redirect(url_for('cart.view_cart'))
+
+    # Submit cart items and clear the cart
+    Cart.submit_cart(user_id)
+    return redirect(url_for('myprofile.purchase_history'))
