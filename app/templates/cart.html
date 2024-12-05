@@ -18,7 +18,9 @@
     <tr>
       <th>Product ID</th>
       <th>Quantity</th>
-      <th>Actions</th>
+      {% if user_id == current_user.id %}
+        <th>Actions</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -37,30 +39,31 @@
               {{ item.quantity }}
             {% endif %}
           </td>
-          <td>
-            {% if user_id == current_user.id %}
+          {% if user_id == current_user.id %}
+            <td>
               <form action="{{ url_for('cart.update_cart') }}" method="POST" class="inline-form">
                 <input type="hidden" name="product_id" value="{{ item.product_id }}">
                 <input type="hidden" name="quantity" value="0">
                 <button type="submit" class="btn btn-danger">Remove</button>
               </form>
-            {% endif %}
-          </td>
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
       <!-- Display total price -->
+      {% if user_id == current_user.id %}
       <tr>
         <td colspan="3" class="text-right"><strong>Total Price: ${{ total_price }}</strong></td>
       </tr>
+      {% endif %}
       {% if cart_items and user_id == current_user.id %}
         <form action="{{ url_for('cart.submit_cart') }}" method="POST" id="submit-cart-form">
             <button type="button" class="btn btn-success" onclick="confirmSubmitCart()">Submit Order</button>
         </form>
       {% endif %}
-
     {% else %}
       <tr>
-        <td colspan="3">The cart is empty.</td>
+        <td colspan="{% if user_id == current_user.id %}3{% else %}2{% endif %}">The cart is empty.</td>
       </tr>
     {% endif %}
   </tbody>

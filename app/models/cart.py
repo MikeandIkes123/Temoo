@@ -95,5 +95,3 @@ class Cart:
         Cart.clear_cart(user_id)
 
         return total_price
-
-

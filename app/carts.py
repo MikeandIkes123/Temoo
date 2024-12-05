@@ -35,9 +35,9 @@ def update_cart():
     user_id = current_user.id
 
     if quantity > 0:
-        Cart.update_item(user_id, product_id, quantity)  # Updates the quantity
+        Cart.update_item(user_id, product_id, quantity)  
     else:
-        Cart.remove_item(user_id, product_id)  # Removes the item if quantity is 0
+        Cart.remove_item(user_id, product_id)  
 
     return redirect(url_for('cart.view_cart', user_id=user_id))
 
@@ -51,11 +51,11 @@ def clear_cart():
 def submit_cart():
     user_id = current_user.id
 
-    # Check if the cart is empty
     cart_items = Cart.get_cart_items(user_id)
     if not cart_items:
         return redirect(url_for('cart.view_cart'))
 
-    # Submit cart items and clear the cart
     Cart.submit_cart(user_id)
     return redirect(url_for('myprofile.purchase_history'))
+
+

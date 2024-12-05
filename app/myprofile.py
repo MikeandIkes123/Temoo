@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-
+from flask import current_app as app
 from .models.user import User
 from .models.purchase import Purchase
 from .models.feedback import Feedback
@@ -83,13 +83,23 @@ def update_balance():
 def purchase_history():
     user_id = current_user.id
 
-    # get all purchases
     purchases = Purchase.get_all_by_uid(user_id)
 
     if not purchases:
         return render_template('purchases.html', error=f"No purchases found for user ID {user_id}", user_id=user_id)
 
-    return render_template('purchases.html', purchases=purchases, user_id=user_id)
+    purchases_with_prices = [
+        {
+            "purchase": purchase,
+            "total_price": purchase.get_price(purchase.pid, purchase.quantity)
+        }
+        for purchase in purchases
+    ]
+
+    return render_template('purchases.html', purchases_with_prices=purchases_with_prices, user_id=user_id)
+
+
+
 
 @bp.route('/my_reviews', methods=['GET'])
 def my_reviews():
