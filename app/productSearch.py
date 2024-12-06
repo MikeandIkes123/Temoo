@@ -22,6 +22,7 @@ def search_products():
 
 @bp.route('/product_details/<int:product_id>')
 def product_details(product_id):
+    # product_id = request.args.get('product_id')
     product = Product.get(product_id)
     feedback = Feedback.get_feedback_by_product(product_id)
     if product:
