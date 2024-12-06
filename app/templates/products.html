@@ -111,7 +111,11 @@
       {% for product in products %}
         <tr data-product-id="{{ product.id }}">
           <th scope="row">{{ product.id }}</th>
-          <td><a href="{{ url_for('productSearch.product_details', product_id=product.id) }}">{{ product.name }}</a></td>
+          <td>
+            <a href="{{ url_for('productSearch.product_details', product_id=product.id) }}">
+              {{ product.name }}
+            </a>
+          </td>
           <td>{{ product.price }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.main_category }}</td>
@@ -267,12 +271,12 @@
         x = rows[i].getElementsByTagName("TD")[n];
         y = rows[i + 1].getElementsByTagName("TD")[n];
         if (dir == "asc") {
-          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          if (x.textContent.toLowerCase() > y.textContent.toLowerCase()) {
             shouldSwitch = true;
             break;
           }
         } else if (dir == "desc") {
-          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          if (x.textContent.toLowerCase() < y.textContent.toLowerCase()) {
             shouldSwitch = true;
             break;
           }

@@ -19,8 +19,8 @@
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Review ID</th>
-                        <th scope="col">Product ID</th>
-                        <th scope="col">Product Name</th>
+                        <th onclick = sortNumericTable(0) scope="col">Product ID</th>
+                        <th onclick = sortAlphaTable(1) scope="col">Product Name</th>
                         <th scope="col">Review</th>
                         <th scope="col">Rating</th>
                         <th scope="col">Review Time</th>
@@ -80,15 +80,15 @@
 
     <div class="tab-pane fade" id="seller-reviews" role="tabpanel" aria-labelledby="seller-reviews-tab">
         {% if seller_reviews %}
-            <table class='table table-hover table-bordered container'>
+            <table id='seller_reviews' class='table table-hover table-bordered container'>
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Review ID</th>
-                        <th scope="col">Seller ID</th>
-                        <th scope="col">User ID</th>
-                        <th scope="col">Review</th>
-                        <th scope="col">Rating</th>
-                        <th scope="col">Review Time</th>
+                        <th onclick=sortNumericTable(0) scope="col">Seller ID</th>
+                        <th onclick=sortNumericTable(1) scope="col">User ID</th>
+                        <th onclick=sortAlphaTable(2) scope="col">Review</th>
+                        <th onclick=sortNumericTable(3) scope="col">Rating</th>
+                        <th onclick=sortNumericTable(4) scope="col">Review Time</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -143,4 +143,80 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+function sortAlphaTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("seller_reviews");
+    switching = true;
+    dir = "asc"; 
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+        if (dir == "asc") {
+          if (x.textContent.toLowerCase() > y.textContent.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (x.textContentalue.toLowerCase() > y.textContent.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;      
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+
+  function sortNumericTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("seller_reviews");
+    switching = true;
+    dir = "asc"; 
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[n];
+        y = rows[i + 1].getElementsByTagName("TD")[n];
+        if (dir == "asc") {
+          if (Number(x.textContent) > Number(y.textContent)) {
+            shouldSwitch = true;
+            break;
+          }
+        } else if (dir == "desc") {
+          if (Number(x.textContent) < Number(y.textContent)) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;      
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+</script>
 {% endblock %}
