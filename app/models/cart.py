@@ -92,19 +92,19 @@ class Cart:
         
         query_inventory = '''
             UPDATE Sells
-            SET quantity = quantity - Cart.quantity
+            SET quantity = Sells.quantity - Cart.quantity
             FROM Cart
-            WHERE Sells.pid = Cart.pid
+            WHERE sells.pid = Cart.pid
         '''
         app.db.execute(query_inventory)
         
         query_products = '''
             UPDATE Products
-            SET Products.quantity = Products.quantity - Cart.quantity
+            SET quantity = Products.quantity - Cart.quantity
             FROM Cart
             WHERE Products.id = Cart.pid
         '''
-        app.db.execute(query_sells)
+        app.db.execute(query_products)
 
         User.update_balance(user_id, 0, total_price)  # Assuming withdrawal only (no deposit)
 
