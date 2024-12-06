@@ -68,3 +68,47 @@ WHERE f.uid = :uid
 ORDER BY f.comment_time DESC;
 """,                        uid=uid)
         return [Feedback(*row) for row in rows]
+
+
+    @staticmethod
+    def submit_feedback(uid, pid, comment, rating):
+        existing_feedback = app.db.execute(
+            "SELECT id FROM Feedbacks WHERE uid = :uid AND pid = :pid",
+            {'uid': uid, 'pid': pid}
+        ).fetchone()
+
+        if existing_feedback:
+            app.db.execute(
+                "UPDATE Feedbacks SET comment = :comment, rating = :rating, comment_time = CURRENT_TIMESTAMP WHERE id = :id",
+                {'comment': comment, 'rating': rating, 'id': existing_feedback['id']}
+            )
+        else:
+            app.db.execute(
+                "INSERT INTO Feedbacks (uid, pid, comment, rating, comment_time) VALUES (:uid, :pid, :comment, :rating, CURRENT_TIMESTAMP)",
+                {'uid': uid, 'pid': pid, 'comment': comment, 'rating': rating}
+            )
+    @staticmethod
+    def update_feedback(feedback_id, uid, comment, rating):
+        try:
+            app.db.execute(
+                "UPDATE Feedbacks SET comment = :comment, rating = :rating, comment_time = CURRENT_TIMESTAMP WHERE id = :id AND uid = :uid",
+                {'id': feedback_id, 'uid': uid, 'comment': comment, 'rating': rating}
+            )
+            app.db.commit()
+        except Exception as e:
+            app.logger.error(f"Error updating review: {str(e)}")
+            return False
+        return True
+
+    @staticmethod
+    def delete_feedback(feedback_id, uid):
+        try:
+            app.db.execute(
+                "DELETE FROM Feedbacks WHERE id = :id AND uid = :uid",
+                {'id': feedback_id, 'uid': uid}
+            )
+            app.db.commit()
+        except Exception as e:
+            app.logger.error(f"Error deleting review: {str(e)}")
+            return False
+        return True
