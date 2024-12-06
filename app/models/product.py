@@ -117,3 +117,45 @@ WHERE quantity > 0
                     '''
         rows = app.db.execute(query, k=k)
         return [Product(*row) for row in rows]
+    
+
+    def get_category(cat, all=False):
+        if all:
+            query = '''
+                    SELECT * 
+                    FROM Products
+                    WHERE quantity > 0
+                    ORDER BY ratings DESC
+                    LIMIT 100
+                    '''
+        else:
+            query = f'''
+                SELECT * 
+                FROM Products
+                WHERE quantity > 0 AND UPPER(main_category) LIKE UPPER('%{cat}%')
+                ORDER BY ratings DESC
+                '''
+
+        rows = app.db.execute(query, cat=cat)
+        return [Product(*row) for row in rows]
+    
+    
+    def get_keyword(word, all=False):
+        if all:
+            query = '''
+                    SELECT * 
+                    FROM Products
+                    WHERE quantity > 0
+                    ORDER BY ratings DESC
+                    LIMIT 100
+                    '''
+        else:
+            query = f'''
+                SELECT * 
+                FROM Products
+                WHERE quantity > 0 AND UPPER(name) LIKE UPPER('%{word}%')
+                ORDER BY ratings DESC
+                '''
+
+        rows = app.db.execute(query, word=word)
+        return [Product(*row) for row in rows]

@@ -5,10 +5,12 @@ from .product import Product
 
 
 class Sells:
-    def __init__(self, uid, pid):
+    def __init__(self, uid, pid, quantity=0): # Bernie added quantity
         self.uid = uid # user id that sells it 
         self.pid = pid # product id that is being sold 
-    
+            
+        # Bernie added
+        self.quantity = quantity
     @staticmethod
     def get_inventory_by_seller(uid):
         rows = app.db.execute('''
@@ -33,10 +35,11 @@ class Sells:
                         WHERE uid = :uid AND pid = :pid
                         ''', uid = product.uid, pid = product.pid, quantity = product.quantity)
     # TODO: 
-    # def get_seller_from_product(pid):
-    #     rows = app.db.execute('''
-    #                         SELECT uid
-    #                         FROM Sells
-    #                         WHERE pid = :pid
-    #                         ''')
-    #     return Product(*(rows[0])) if rows else None
+    def get_seller_from_product(pid):
+        rows = app.db.execute('''
+                            SELECT uid, pid, quantity
+                            FROM Sells
+                            WHERE pid = :pid
+                            ''', pid = pid)
+        # return Product(*(rows[0])) if rows else None
+        return [Sells(*row) for row in rows] if rows else None
