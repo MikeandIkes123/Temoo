@@ -13,9 +13,9 @@ Also add:
 from flask import current_app as app
 
 class Feedback:
-    def __init__(self, id, pid, product_name, comment, rating, comment_time):
+    def __init__(self, id, uid, pid, product_name, comment, rating, comment_time):
         self.id = id
-        # self.uid = uid
+        self.uid = uid
         self.pid = pid
         self.product_name = product_name
         self.comment = comment
@@ -38,6 +38,7 @@ class Feedback:
         rows = app.db.execute('''
 SELECT 
     f.id AS "Feedback ID", 
+    f.uid AS "User ID",
     f.pid AS "Product ID", 
     p.name AS "Product Name", 
     f.comment AS "Comment", 
@@ -57,6 +58,7 @@ LIMIT 5;
         rows = app.db.execute("""
 SELECT 
     f.id AS "Feedback ID", 
+    f.uid AS "User ID",
     f.pid AS "Product ID", 
     p.name AS "Product Name", 
     f.comment AS "Comment", 
@@ -110,18 +112,6 @@ ORDER BY f.comment_time DESC;
             app.logger.error(f"Error updating review: {str(e)}")
             return False
         return True
-
-    @staticmethod
-    def delete_feedback(feedback_id, uid):
-        try:
-            app.db.execute(
-                "DELETE FROM Feedbacks WHERE id = :id AND uid = :uid",
-                id = feedback_id, uid = uid
-            )
-        except Exception as e:
-            app.logger.error(f"Error deleting review: {str(e)}")
-            return False
-        return True
     
     @staticmethod
     def get_feedback_by_product(pid):
@@ -129,6 +119,7 @@ ORDER BY f.comment_time DESC;
     SELECT
         f.id AS "Feedback ID",
         f.uid AS "User ID",
+        f.pid AS "Product ID",
         u.firstname AS "User Name",
         f.comment AS "Comment",
         f.rating AS "Rating",
@@ -157,3 +148,10 @@ ORDER BY f.comment_time DESC;
         """, feedback_id =  feedback_id)
         return [Feedback(*row) for row in rows]
 
+    @staticmethod
+    def delete_feedback(user_id, product_id):
+        query = '''
+            DELETE FROM Feedbacks
+            WHERE uid = :user_id AND pid = :product_id
+        '''
+        app.db.execute(query, user_id=user_id, product_id = product_id)

@@ -68,38 +68,53 @@ def submit_feedback():
     print(current_user.id)
     return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks=feedbacks, message=message)
 
+@bp.route('/edit_feedback_comment/', methods=['POST'])
+def edit_comment():
+    review_id = request.form.get('review_id')
+    curr_rating = request.form.get('curr_rating')
+    new_comment = request.form.get('comment')
+    product_id = request.form.get('product_id')
+    Feedback.update_feedback(review_id, current_user.id, new_comment, curr_rating)
+    return redirect(url_for('productSearch.product_details', product_id=product_id))
 
-@bp.route('/edit_feedback/<int:feedback_id>', methods=['GET', 'POST'])
-def edit_feedback(feedback_id):
-    if request.method == 'POST':
-        comment = request.form.get('comment')
-        rating = request.form.get('rating')
-
-        if not (comment and rating):
-            error_message = 'All fields are required.'
-            feedback = Feedback.get_feedback(feedback_id)
-            return render_template('edit_feedback.html', feedback=feedback, error=error_message)
-
-        success = Feedback.update_feedback(feedback_id, current_user.id, comment, rating)
-        if success:
-            message = 'Review updated successfully!'
-        else:
-            message = 'Error updating review.'
-
-        return redirect(url_for('feedbackSearch.my_reviews', message=message))
-
-    feedback = Feedback.get_feedback(feedback_id)
-    if not feedback or feedback['uid'] != current_user.id:
-        return render_template('unauthorized.html', error='Unauthorized access.')
-
-    return render_template('edit_feedback.html', feedback=feedback)
+@bp.route('/edit_feedback_rating/', methods=['POST'])
+def edit_rating():
+    review_id = request.form.get('review_id')
+    curr_comment = request.form.get('curr_comment')
+    new_rating = request.form.get('rating')
+    product_id = request.form.get('product_id')
+    Feedback.update_feedback(review_id, current_user.id, curr_comment, new_rating)
+    return redirect(url_for('productSearch.product_details', product_id=product_id))
 
 
-@bp.route('/delete_feedback/<int:feedback_id>', methods=['POST'])
-def delete_feedback(feedback_id):
-    if Feedback.delete_feedback(feedback_id, current_user.id):
-        message = 'Review deleted successfully!'
-    else:
-        message = 'Error deleting review.'
 
-    return redirect(url_for('feedbackSearch.my_reviews', message=message))
+
+    # if request.method == 'POST':
+    #     comment = request.form.get('comment')
+    #     rating = request.form.get('rating')
+
+    #     if not (comment and rating):
+    #         error_message = 'All fields are required.'
+    #         feedback = Feedback.get_feedback(feedback_id)
+    #         return render_template('edit_feedback.html', feedback=feedback, error=error_message)
+
+    #     success = Feedback.update_feedback(feedback_id, current_user.id, comment, rating)
+    #     if success:
+    #         message = 'Review updated successfully!'
+    #     else:
+    #         message = 'Error updating review.'
+
+    #     return redirect(url_for('feedbackSearch.my_reviews', message=message))
+
+    # feedback = Feedback.get_feedback(feedback_id)
+    # if not feedback or feedback.uid != current_user.id:
+    #     return render_template('unauthorized.html', error='Unauthorized access.')
+
+    # return render_template('edit_feedback.html', feedback=feedback)
+
+@bp.route('/delete_feedback/', methods=['POST'])
+def delete_feedback():
+    product_id = request.form['product_id']
+    user_id = current_user.id  
+    Feedback.delete_feedback(user_id, product_id)
+    return redirect(url_for('productSearch.product_details', product_id=product_id))

@@ -25,6 +25,6 @@ def product_details(product_id):
     product = Product.get(product_id)
     feedback = Feedback.get_feedback_by_product(product_id)
     if product:
-        return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks = feedback)
+        return render_template('product_details.html', product=product, current_user_id = current_user.id, feedbacks = feedback)
     else:
         return "Product not found", 404
