@@ -28,22 +28,10 @@ def submit_sfeedback():
     sid = request.form.get('seller_id')
     comment = request.form.get('comment')
     rating = request.form.get('rating')
-
     # if not (sid and comment and rating):
     #     return render_template('public_view.html', seller_id=sid, error="All fields are required.")
-
     success = SFeedback.submit_feedback(current_user.id, sid, comment, rating)
-    if success:
-        message = 'Your review has been successfully posted!'
-    else:
-        message = 'Error: review could not be posted.'
-
-    # get updated list of reviews for product to display on detailed prod page
-    sfeedbacks = SFeedback.get_reviews_of_seller(sid)
-    seller = User.get(sid) 
-    is_seller=User.is_seller(seller.id)
-
-    return redirect(url_for('publicViewSearch.public_view', user_id=seller.id))
+    return redirect(url_for('publicViewSearch.public_view', user_id=sid))
 
 @bp.route('/edit_sfeedback_comment/', methods=['POST'])
 def edit_scomment():

@@ -89,7 +89,8 @@ LIMIT 5;
 
             if existing_purchase:
                 existing_feedback = app.db.execute(
-                    "SELECT id from sFeedback WHERE uid = :uid AND sid = :sid"
+                    "SELECT id from sFeedbacks WHERE uid = :uid AND sid = :sid",
+                    uid = uid, sid = sid
                 )
 
                 if existing_feedback: 
@@ -104,6 +105,7 @@ LIMIT 5;
                         "INSERT INTO sFeedbacks (uid, sid, comment, rating, comment_time) VALUES (:uid, :sid, :comment, :rating, CURRENT_TIMESTAMP)",
                         uid = uid, sid = sid, comment = comment, rating = rating
                     )
+                    print("Feedback submitted and inserted into DB")
                 return True
             return False
         

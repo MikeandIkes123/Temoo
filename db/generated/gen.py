@@ -47,16 +47,21 @@ def gen_users(num_users):
 
 def gen_products():
     available_pids = []
-    prod_df = pd.read_csv('Amazon_Products.csv', header=None)
+    prod_df = pd.read_csv('db/generated/Amazon_Products.csv', header=None)
     prod_df.columns = ["id", "name", "price", "available", "description", "main_category", "sub_category", "ratings", "no_of_ratings", "image_url"]
     
-    sell_df = pd.read_csv('Sells.csv', header=None)
+    sell_df = pd.read_csv('db/generated/Sells.csv', header=None)
     sell_df.columns = ["sid", "pid", "quantity"]
     
-    prod_quants = sell_df.groupby("pid").agg({"quantity": "sum"})
-    # print(prod_quants.loc[1].values[0])
+    feedback = pd.read_csv('db/generated/Feedbacks.csv', header=None)
+    feedback.columns = ["id", "uid", "pid", "comment", "rating", "comment_time"]
     
-    with open('Products.csv', 'w') as f:
+    prod_quants = sell_df.groupby("pid").agg({"quantity": "sum"})
+    
+    avg_ratings = feedback.groupby("pid").agg({"rating": "mean"})
+    num_ratings = feedback.groupby("pid").agg({"rating": "sum"})
+    
+    with open('db/generated/Products.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Products...', end=' ', flush=True)
         for pid in range(len(prod_df)):
@@ -69,14 +74,27 @@ def gen_products():
                 quantity = prod_quants.loc[pid].values[0]
             else:
                 quantity = 0
+                
+            if pid in avg_ratings.index:
+                rating = avg_ratings.loc[pid].values[0]
+            else:
+                rating = 0
+                
+            if pid in num_ratings.index:
+                no_of_ratings = num_ratings.loc[pid].values[0]
+            else:
+                no_of_ratings = 0
+            
+                
             description = prod_df["description"].iloc[pid]
             main_category = prod_df["main_category"].iloc[pid]
             sub_category = prod_df["sub_category"].iloc[pid]
-            ratings = prod_df["ratings"].iloc[pid]
+            
+            
             no_of_ratings = prod_df["no_of_ratings"].iloc[pid]
             image_url = prod_df["image_url"].iloc[pid]
             
-            writer.writerow([pid, name, price, quantity, description, main_category, sub_category, ratings, no_of_ratings, image_url])
+            writer.writerow([pid, name, price, quantity, description, main_category, sub_category, rating, no_of_ratings, image_url])
             
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
@@ -243,10 +261,10 @@ def gen_cart_data(num_cart_entries, num_products, num_users):
 
 
 # gen_users(num_users)
-gen_purchases(num_purchases, available_pids)
+# gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
 # gen_sellers_and_sells()
-# gen_products()
+gen_products()
 
 
 # gen_sfeedbacks(400, num_sellers)
