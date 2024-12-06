@@ -75,7 +75,9 @@
               <label for="search_type" class="mr-2 text-white">Search by:</label>
               <select class="form-control form-control-sm mr-2" id="search_type" name="search_type" onchange="updateFormAction()">
                 <option value="cart">Cart Items by User ID</option>
-                <option value="products">Top k Most Expensive Products</option>
+                <option value="products_price">k Priciest Products</option>
+                <option value="products_category">Search Product Category</option>
+                <option value="products_keyword">Search using keyword</option>
                 <option value="feedback">Reviews by User ID</option>
                 <option value="sfeedback">Sellers' Reviews by User ID</option>
                 <option value="seller">Products by Seller ID</option>
@@ -125,10 +127,20 @@
           searchInput.name = "user_id";
           searchInput.placeholder = "Enter User ID";
           break;
-        case 'products':
-          form.action = "{{ url_for('productSearch.search_products') }}";
+        case 'products_price':
+          form.action = "{{ url_for('productSearch.search_products_price') }}";
           searchInput.name = "top_k_expensive";
           searchInput.placeholder = "Enter integer k>=0, (or leave blank for all)";
+          break;
+        case 'products_category':
+          form.action = "{{ url_for('productSearch.search_products_category') }}";
+          searchInput.name = "main_category";
+          searchInput.placeholder = "Search for main category";
+          break;
+        case 'products_keyword':
+          form.action = "{{ url_for('productSearch.search_products_keyword') }}";
+          searchInput.name = "keyword";
+          searchInput.placeholder = "Search using keyword";
           break;
         case 'feedback':
           form.action = "{{ url_for('feedbackSearch.search_feedback') }}";

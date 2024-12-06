@@ -1,0 +1,67 @@
+.main-container{
+    display: flex;
+    flex-direction: horizontal;
+}
+
+.left-pane{
+    display: flex;
+    flex-direction: vertical;
+    width: 40%;
+    height: 100%;
+}
+.right-pane{
+    width: 55%;
+    height: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 25% !important;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    border-width: 1px 1px 0;
+    background-color: #f7f7f7;
+}
+
+h2{
+    font-family: "Verdana";
+}
+.rating-tag{
+    display: flex;
+    flex-direction: horizontal;
+}
+
+.price{
+    font-size: 300%;
+    font-family: "Georgia";
+}
+.price b{
+    font-size: 50%;
+}
+
+.tags{
+    font-size: 100%;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: orange;
+    text-decoration: underline;
+    font-style: italic;
+    margin-left: 1%;
+}
+
+.rating{
+    font-size: 110%;
+    color: blue;
+    font-family: "Times New Roman";
+    margin-right: 1%;
+}
+.description{
+    margin-top: 2%;
+    margin-bottom: 3%;
+}

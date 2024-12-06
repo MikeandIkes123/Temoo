@@ -1,68 +1,115 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ product.name }}</h2>
-<div>
-    <img src="{{ product.image_url }}" alt="{{ product.name }}" style="width:200px;">
-    <p>Price: ${{ product.price }}</p>
-    <p>Description: {{ product.description }}</p>
-    <p>Category: {{ product.main_category }}</p>
-    <p>Rating: {{ product.ratings }} ({{ product.no_of_ratings }} ratings)</p>
 
-    <!-- Reviews Section -->
-    <h3>Reviews</h3>
-    {% if feedbacks %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Review ID</th>
-                    <th>User ID</th>
-                    <th>Review</th>
-                    <th>Rating</th>
-                    <th>Review Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for review in feedbacks %}
+<head>
+    <link rel="stylesheet" href="../static/css/product_details.css">
+</head>
+
+
+<div class="main-container">
+
+    <div class="left-pane">
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" style="width:80%;">
+    </div>
+    
+    <div class="right-pane">
+        <h2 id="name">{{ product.name }}</h2>
+        
+        <div class="rating-tag">
+            <div class="rating">Rating: {{ product.ratings }} ({{ product.no_of_ratings }} ratings)</div>
+            <div class="tags">
+                #{{ product.main_category }}
+            </div>
+            <div class="tags">
+                #{{ product.sub_category }}
+            </div>
+        </div>
+        
+        <div class="price"><b>$ </b>{{ product.price }}</div>
+    
+        <div class="description">
+            <h3>Description:</h3>{{ product.description }}
+        </div>    
+
+        <div class="Sellers">
+            <h4>Sellers</h4>
+            <table id="seller-table" class="table">
+                <thead class="thead-dark">
                     <tr>
-                        <th scope="row">{{ review.id }}</th>
-                        <td>{{ review.uid }}</td>
-                        <td>{{ review.comment }}</td>
-                        <td>{{ review.rating }}</td>
-                        <td>{{ review.comment_time }}</td>
-                        <td>
-                            {% if review.uid == current_user %}
-                                <a href="{{ url_for('feedbackSearch.edit_feedback', feedback_id=review.id) }}">Edit</a>
-                                <a href="{{ url_for('feedbackSearch.delete_feedback', feedback_id=review.id) }}" onclick="return confirm('Are you sure?')">Delete</a>
-                            {% endif %}
-                        </td>
+                        <th scope="col">Seller ID</th>
+                        <th scope="col">Quantity</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
+                </thead>
+                <tbody>
+                    {% for seller in sellers_info %}
+                        <tr>
+                            <td>{{ seller.uid }}</td>
+                            <td>{{ seller.quantity }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            
+        </div>
 
-    <!-- To submit review !! -->
-    <h3>Leave a Review</h3>
-    <form action="{{ url_for('feedbackSearch.submit_feedback') }}" method="post">
-        <input type="hidden" name="product_id" value="{{ product.id }}">
-        <div class="form-group">
-            <label for="comment">Comment:</label>
-            <textarea class="form-control" id="comment" name="comment" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="rating">Rating:</label>
-            <select class="form-control" id="rating" name="rating" required>
-                <option value="1">1 - Poor</option>
-                <option value="2">2 - Suboptimal</option>
-                <option value="3">3 - Good</option>
-                <option value="4">4 - Very Good</option>
-                <option value="5">5 - Excellent</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Review</button>
-    </form>
+        <!-- Reviews Section -->
+        <h3>Reviews</h3>
+        {% if feedbacks %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Review ID</th>
+                        <th>User ID</th>
+                        <th>Review</th>
+                        <th>Rating</th>
+                        <th>Review Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in feedbacks %}
+                        <tr>
+                            <th scope="row">{{ review.id }}</th>
+                            <td>{{ review.uid }}</td>
+                            <td>{{ review.comment }}</td>
+                            <td>{{ review.rating }}</td>
+                            <td>{{ review.comment_time }}</td>
+                            <td>
+                                {% if review.uid == current_user %}
+                                    <a href="{{ url_for('feedbackSearch.edit_feedback', feedback_id=review.id) }}">Edit</a>
+                                    <a href="{{ url_for('feedbackSearch.delete_feedback', feedback_id=review.id) }}" onclick="return confirm('Are you sure?')">Delete</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No reviews yet.</p>
+        {% endif %}
+
+        <!-- To submit review !! -->
+        <h3>Leave a Review</h3>
+        <form action="{{ url_for('feedbackSearch.submit_feedback') }}" method="post">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <div class="form-group">
+                <label for="comment">Comment:</label>
+                <textarea class="form-control" id="comment" name="comment" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <select class="form-control" id="rating" name="rating" required>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Suboptimal</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+    
 </div>
 {% endblock %}

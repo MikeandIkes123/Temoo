@@ -103,7 +103,7 @@
         <th onclick="sortAlphaTable(3)" scope="col">Main Category</th>
         <th onclick="sortNumericTable(4)" scope="col">Ratings</th>
         <th scope="col">Image</th>
-        <th scope="col">Items in Stock</th>
+        <th onclick="sortNumericTable(6)" scope="col">Items in Stock</th>
         <th scope="col">Cart Quantity</th>
       </tr>
     </thead>
@@ -174,7 +174,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     const content = document.querySelector('.content'); 
-    const itemsPerPage = 5;
+    const itemsPerPage = 10;
     let currentPage = 0;
     const items = Array.from(content.getElementsByTagName('tr')).slice(1);
 
