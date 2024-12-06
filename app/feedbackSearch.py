@@ -29,24 +29,6 @@ def search_feedback():
     return render_template('feedback.html', feedback_entries=feedback_entries, user_id=user_id)
 
 
-
-
-# @bp.route('/submit_feedback', methods=['POST'])
-# def submit_feedback():
-#     pid = request.form.get('product_id')
-#     comment = request.form.get('comment')
-#     rating = request.form.get('rating')
-
-#     if (not pid) or not comment or not rating:
-#         flash('All fields are required.', 'error')
-#         return redirect(url_for('productSearch.product_details', product_id = pid))
-#     success = Feedback.submit_feedback(current_user.id, pid, comment, rating)
-#     if success:
-#         flash('Your review has been successfully posted!', 'success')
-#     else:
-#         flash('Error: review could not be posted.', 'error')
-#     return redirect(url_for('productSearch.product_details', product_id = pid))
-
 @bp.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     pid = request.form.get('product_id')
@@ -66,7 +48,7 @@ def submit_feedback():
     feedbacks = Feedback.get_feedback_by_product(pid)
     product = Product.get(pid) 
     print(current_user.id)
-    return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks=feedbacks, message=message)
+    return redirect(url_for('productSearch.product_details', product_id=product.id))
 
 @bp.route('/edit_feedback_comment/', methods=['POST'])
 def edit_comment():

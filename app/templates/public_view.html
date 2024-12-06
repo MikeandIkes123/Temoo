@@ -20,36 +20,107 @@
     {% if is_seller %}
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Address:</strong> {{ user.address }}</p>
+            <!-- To submit review -->
+            <h3>Leave a Review</h3>
+            <form action="{{ url_for('sFeedbackSearch.submit_sfeedback') }}" method="post">
+                <input type="hidden" name="seller_id" value="{{ user.id }}">
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea class="form-control" id="comment" name="comment" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="rating">Rating:</label>
+                    <select class="form-control" id="rating" name="rating" required>
+                        <option value="1">1 - Poor</option>
+                        <option value="2">2 - Suboptimal</option>
+                        <option value="3">3 - Good</option>
+                        <option value="4">4 - Very Good</option>
+                        <option value="5">5 - Excellent</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+        
+        {% if feedbacks %}
         <h3>Seller Reviews</h3>
-        {% if seller_reviews %}
-            <table class='table table-hover table-bordered container'>
-                <thead class="thead-dark">
+            <table class="table">
+                <thead>
                     <tr>
-                        <th scope="col">Review ID</th>
-                        <th scope="col">Seller ID</th>
-                        <th scope="col">User ID</th>
-                        <th scope="col">Review</th>
-                        <th scope="col">Rating</th>
-                        <th scope="col">Review Time</th>
+                        <th>Review ID</th>
+                        <th>User ID</th>
+                        <th>Review</th>
+                        <th>Rating</th>
+                        <th>Review Time</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for review in seller_reviews %}
+                    {% for review in feedbacks %}
                         <tr>
                             <th scope="row">{{ review.id }}</th>
-                            <td>{{ review.sid }}</td>
                             <td>{{ review.uid }}</td>
-                            <td>{{ review.comment }}</td>
-                            <td>{{ review.rating }}</td>
+                            <td>
+                                {% if review.uid == current_user.id%}
+                                <form id="change_comment" method="POST" action="{{ url_for('sFeedbackSearch.edit_scomment') }}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="hidden" name="review_id" value="{{ review.id }}">
+                                        <input type="hidden" name="curr_rating" value="{{ review.rating }}">
+                                        <input type="hidden" name="seller_id" value="{{ user.id }}">
+                                        <input type="text" id="comment" name="comment" value="{{ review.comment }}" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Edit Review</button>
+                                </form>
+                                {% else %}
+                                {{ review.comment }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if review.uid == current_user.id %}
+                                <form id="change_rating" method="POST" action="{{ url_for('sFeedbackSearch.edit_srating') }}" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="hidden" name="review_id" value="{{ review.id }}">
+                                        <input type="hidden" name="curr_comment" value="{{ review.comment }}">
+                                        <input type="hidden" name="seller_id" value="{{ user.id }}">
+                                        <label>Previous Rating: {{ review.rating }}</label>
+                                        <select class="form-control" id="rating_old" name="rating" required>
+                                            <option value="1">1 - Poor</option>
+                                            <option value="2">2 - Suboptimal</option>
+                                            <option value="3">3 - Good</option>
+                                            <option value="4">4 - Very Good</option>
+                                            <option value="5">5 - Excellent</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Edit Rating</button>
+                                </form>                                
+                                {% else %}
+                                {{ review.rating }}
+                                {% endif %}
+                            </td>
                             <td>{{ review.comment_time }}</td>
+                            <td> 
+                                {% if review.uid == current_user.id %}
+                                <form action="{{ url_for('sFeedbackSearch.delete_sfeedback') }}" method="POST" id="delete-review-form">
+                                    <input type="hidden" name="review_id" value="{{ review.id }}">
+                                    <input type="hidden" name="seller_id" value="{{ user.id }}">
+                                    <button type="button" class="btn btn-danger" onclick="deleteReview()">Delete Review</button>
+                                </form>
+                                <script>
+                                    function deleteReview() {
+                                        if (confirm("Are you sure you want to delete your review?")) {
+                                            document.getElementById('delete-review-form').submit();
+                                        }
+                                    }
+                                </script>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No seller reviews found.</p>
+            <p>No reviews yet.</p>
         {% endif %}
+    
     {% endif %}
 {% endif %}
-
 {% endblock %}

@@ -45,6 +45,7 @@ def search_products_keyword():
 
 @bp.route('/product_details/<int:product_id>')
 def product_details(product_id):
+    # product_id = request.args.get('product_id')
     product = Product.get(product_id)
     feedback = Feedback.get_feedback_by_product(product_id)
     
@@ -54,6 +55,6 @@ def product_details(product_id):
         sellers_info = [Sells(uid="NA", pid=product_id, quantity=0)]
     
     if product:
-        return render_template('product_details.html', product=product, current_user_id = current_user.id, feedbacks = feedback, sellers_info=sellers_info)
+        return render_template('product_details.html', product=product, current_user = current_user, feedbacks = feedback)
     else:
         return "Product not found", 404

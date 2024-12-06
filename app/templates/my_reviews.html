@@ -1,6 +1,6 @@
 {% extends "base.html" %}
+{%block content%}
 
-{% block content %}
 <h2>My Reviews</h2>
 
 <ul class="nav nav-tabs" id="reviewsTab" role="tablist">
@@ -89,6 +89,7 @@
                         <th scope="col">Review</th>
                         <th scope="col">Rating</th>
                         <th scope="col">Review Time</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,9 +98,42 @@
                             <th scope="row">{{ review.id }}</th>
                             <td>{{ review.sid }}</td>
                             <td>{{ review.uid }}</td>
-                            <td>{{ review.comment }}</td>
-                            <td>{{ review.rating }}</td>
+                            <td>
+                                {% if review.uid == current_user.id %}
+                                    <form method="POST" action="{{ url_for('sFeedbackSearch.edit_scomment') }}">
+                                        <input type="hidden" name="review_id" value="{{ review.id }}">
+                                        <input type="text" name="comment" value="{{ review.comment }}" required class="form-control">
+                                        <button type="submit" class="btn btn-primary btn-sm mt-2">Edit</button>
+                                    </form>
+                                {% else %}
+                                    {{ review.comment }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if review.uid == current_user.id %}
+                                    <form method="POST" action="{{ url_for('sFeedbackSearch.edit_srating') }}">
+                                        <input type="hidden" name="review_id" value="{{ review.id }}">
+                                        <select class="form-control" name="rating" required>
+                                            <option value="1" {% if review.rating == 1 %}selected{% endif %}>1 - Poor</option>
+                                            <option value="2" {% if review.rating == 2 %}selected{% endif %}>2 - Suboptimal</option>
+                                            <option value="3" {% if review.rating == 3 %}selected{% endif %}>3 - Good</option>
+                                            <option value="4" {% if review.rating == 4 %}selected{% endif %}>4 - Very Good</option>
+                                            <option value="5" {% if review.rating == 5 %}selected{% endif %}>5 - Excellent</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary btn-sm mt-2">Edit</button>
+                                    </form>
+                                {% else %}
+                                    {{ review.rating }}
+                                {% endif %}
+                            </td>
                             <td>{{ review.comment_time }}</td>
+                            <td>
+                                {% if review.uid == current_user.id %}
+                                    <form action="{{ url_for('sFeedbackSearch.delete_sfeedback', feedback_id=review.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

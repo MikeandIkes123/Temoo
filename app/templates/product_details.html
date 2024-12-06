@@ -96,7 +96,7 @@
                         <th scope="row">{{ review.id }}</th>
                         <td>{{ review.uid }}</td>
                         <td>
-                            {% if review.uid == current_user_id %}
+                            {% if review.uid == current_user.id %}
                             <form id="change_comment" method="POST" action="{{ url_for('feedbackSearch.edit_comment') }}" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input type="hidden" name="review_id" value="{{ review.id }}">
@@ -106,12 +106,14 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary">Edit Review</button>
                                 </form>
+                                {% else %}
+                                {{ review.comment }}
                             {% endif %}
     
                         </td>
                         <td>
-                            {% if review.uid == current_user_id %}
-                            <form id="change_comment" method="POST" action="{{ url_for('feedbackSearch.edit_rating') }}" enctype="multipart/form-data">
+                            {% if review.uid == current_user.id %}
+                            <form id="change_rating" method="POST" action="{{ url_for('feedbackSearch.edit_rating') }}" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input type="hidden" name="review_id" value="{{ review.id }}">
                                     <input type="hidden" name="curr_comment" value="{{ review.comment }}">
@@ -131,11 +133,13 @@
                                 <button type="submit" class="btn btn-primary">Edit Rating</button>
                                 </form>
                         </td>
+                        {% else %}
+                        {{ review.rating }}
                             {% endif %}
 
                         <td>{{ review.comment_time }}</td>
                         <td> 
-                            {% if review.uid == current_user_id %}
+                            {% if review.uid == current_user.id %}
                             <form action="{{ url_for('feedbackSearch.delete_feedback') }}" method="POST" id="delete-review-form">
                                 <input type="hidden" name="product_id" value="{{ review.pid }}">
                                 <button type="button" class="btn btn-danger" onclick="deleteReview()">Delete Review</button>
