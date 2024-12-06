@@ -19,6 +19,8 @@ def view_cart():
 
 @bp.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
     product_id = request.form.get('product_id')
     quantity = request.form.get('quantity', 1)  # Default quantity to 1 if not specified
     user_id = current_user.id  # Assuming user is logged in and current_user is available

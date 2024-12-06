@@ -163,6 +163,7 @@
         <p>No reviews yet.</p>
     {% endif %}
     
+    {% if current_user.is_authenticated %}
     <!-- To submit review !! -->
     <h3>Leave a Review</h3>
     <form action="{{ url_for('feedbackSearch.submit_feedback') }}" method="post">
@@ -184,6 +185,8 @@
         <button type="submit" class="btn btn-primary">Submit Review</button>
     </form>
 </div>
+    {% endif %}
+
 
 </article>
 
