@@ -96,7 +96,7 @@
                     {% for review in seller_reviews %}
                         <tr>
                             <th scope="row">{{ review.id }}</th>
-                            <td>{{ review.sid }}</td>
+                            <td><a href="{{ url_for('publicViewSearch.public_view', user_id=review.sid) }}">{{ review.sid }}</a></td>
                             <td>{{ review.uid }}</td>
                             <td>
                                 {% if review.uid == current_user.id %}
