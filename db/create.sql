@@ -21,8 +21,8 @@ CREATE TABLE Products (
     description VARCHAR(255),
     main_category VARCHAR(255),
     sub_category VARCHAR(255),
-    ratings DECIMAL(2,1),
-    no_of_ratings INT,
+    ratings DECIMAL(2,1) DEFAULT 0,
+    no_of_ratings INT DEFAULT 0,
     image_url VARCHAR(2083)
 );
 
@@ -35,6 +35,7 @@ CREATE TABLE Purchases (
     sid INT NOT NULL REFERENCES Sellers(id),
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     quantity INT NOT NULL,
+    fulfillment BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (uid, pid, sid, time_purchased)
 );
 -- creating feedbacks table 

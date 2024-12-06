@@ -97,7 +97,10 @@
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{{ url_for('myprofile.myprofile') }}">My Profile</a>
             <a class="dropdown-item" href="{{ url_for('cart.view_cart') }}">View Cart</a>
-            <div class="dropdown-divider"></div>
+            {% if current_user.is_seller(current_user.id) %}
+              <a class="dropdown-item" href="{{ url_for('sellerhub.view_hub') }}">View Seller Hub</a>
+            {% endif %}
+              <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ url_for('users.logout') }}">Log out</a>
           </div>
         </li>
@@ -110,6 +113,7 @@
   </nav>
 
   <div class="main-content">
+    {% block title %}{% endblock %}
     {% block content %}{% endblock %}
   </div>
 

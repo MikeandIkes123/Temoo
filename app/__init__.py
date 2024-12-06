@@ -41,5 +41,8 @@ def create_app():
 
     from .publicViewSearch import bp as publicViewSearch_bp
     app.register_blueprint(publicViewSearch_bp)
+    
+    from .sellerhub import bp as sellerhub_bp
+    app.register_blueprint(sellerhub_bp)
 
     return app
