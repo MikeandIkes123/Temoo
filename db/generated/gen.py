@@ -153,6 +153,7 @@ def gen_sellers_and_sells():
     # get 0th col of users and products as IDs 
     user_ids = users_df.iloc[:, 0].tolist()
     product_ids = products_df.iloc[:, 0].tolist()
+    print(len(product_ids))
     
     # 9.7 sellers / 310 users = 3.12% percent of users are sellers on Amazon based on data from Google 
     # randomly select 3.12% of users to be sellers as well 
@@ -243,10 +244,10 @@ def gen_cart_data(num_cart_entries, num_products, num_users):
 
 
 # gen_users(num_users)
-gen_purchases(num_purchases, available_pids)
+# gen_purchases(num_purchases, available_pids)
 # gen_feedbacks(num_feedbacks)
 # gen_sellers_and_sells()
-# gen_products()
+gen_products()
 
 
 # gen_sfeedbacks(400, num_sellers)

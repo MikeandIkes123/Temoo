@@ -78,6 +78,9 @@
 {% endif %}
 
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // location.reload()
+  });
   function confirmClearCart() {
     if (confirm("Are you sure you want to clear your entire cart?")) {
       document.getElementById('clear-cart-form').submit();

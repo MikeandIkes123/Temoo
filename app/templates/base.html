@@ -120,6 +120,7 @@
 
   <script>
     if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
+      console.log("relogin")
       window.location.href = "{{ url_for('users.login') }}";  // Redirect to login page
     }
   </script>

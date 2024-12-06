@@ -94,6 +94,7 @@ WHERE id = :id
 SELECT *
 FROM Products
 WHERE quantity > 0
+LIMIT 200
 ''',
                               available=available)
         return [Product(*row) for row in rows]
@@ -106,6 +107,7 @@ WHERE quantity > 0
                     FROM Products
                     WHERE quantity > 0
                     ORDER BY price DESC
+                    LIMIT 200
                     '''
         else:
             query = '''
@@ -134,6 +136,7 @@ WHERE quantity > 0
                 FROM Products
                 WHERE UPPER(main_category) LIKE UPPER('%{cat}%')
                 ORDER BY ratings DESC
+                LIMIT 100
                 '''
 
         rows = app.db.execute(query, cat=cat)
@@ -155,6 +158,7 @@ WHERE quantity > 0
                 FROM Products
                 WHERE UPPER(name) LIKE UPPER('%{word}%')
                 ORDER BY ratings DESC
+                LIMIT 100
                 '''
 
         rows = app.db.execute(query, word=word)

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../static/css/product_details.css">
 </head>
 
-
+<article class="content">
 <div class="main-container">
 
     <div class="left-pane">
@@ -50,10 +50,26 @@
                     {% endfor %}
                 </tbody>
             </table>
-            
-            
         </div>
-
+        <div>
+            <td class="quantity-controls">
+                <button type="button" class="increase-quantity">+</button>
+                <span class="quantity-display">1</span>
+                <button type="button" class="decrease-quantity">-</button>
+            </td>
+            <td class="add-to-cart">
+                <!-- Form for adding product to cart -->
+                <form method="POST" action="{{ url_for('cart.add_to_cart') }}">
+                    <!-- Product ID -->
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <!-- Quantity Input (hidden) -->
+                    <input type="hidden" name="quantity" class="quantity-input" value="1">
+                    <!-- Submit Button -->
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </td>
+        </div>
+        
     <!-- Reviews Section -->
     <h3>Reviews</h3>
     {% if feedbacks %}
@@ -165,4 +181,41 @@
     </form>
 </div>
 
+</article>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Event listeners for quantity adjustments
+        document.querySelectorAll('.increase-quantity').forEach(button => {
+        button.addEventListener('click', function () {
+            const row = this.parentElement; // div
+            const quantityDisplay = row.querySelector('.quantity-display');
+
+            const quantityInput = row.querySelector('.quantity-input');
+            
+            let quantity = parseInt(quantityInput.value);
+            quantity += 1;
+            quantityInput.value = quantity;
+            quantityDisplay.textContent = quantity;
+        });
+        });
+
+        document.querySelectorAll('.decrease-quantity').forEach(button => {
+        button.addEventListener('click', function () {
+            const row = this.parentElement; // div
+            const quantityDisplay = row.querySelector('.quantity-display');
+
+            const quantityInput = row.querySelector('.quantity-input');
+            
+            let quantity = parseInt(quantityInput.value);
+            if (quantity > 1) {
+            quantity -= 1;
+            quantityInput.value = quantity;
+            quantityDisplay.textContent = quantity;
+            }
+        });
+        });
+    });
+</script>
 {% endblock %}
