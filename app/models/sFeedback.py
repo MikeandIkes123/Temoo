@@ -143,9 +143,9 @@ LIMIT 5;
         return [SFeedback(*row) for row in rows]
 
     @staticmethod
-    def delete_feedback(user_id, product_id):
+    def delete_feedback(review_id):
         query = '''
             DELETE FROM sFeedbacks
-            WHERE uid = :user_id AND pid = :product_id
+            WHERE id = :review_id
         '''
-        app.db.execute(query, user_id=user_id, product_id = product_id)
+        app.db.execute(query, review_id = review_id)

@@ -48,7 +48,7 @@ def submit_feedback():
     feedbacks = Feedback.get_feedback_by_product(pid)
     product = Product.get(pid) 
     print(current_user.id)
-    return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks=feedbacks, message=message)
+    return redirect(url_for('productSearch.product_details', product_id=product.id))
 
 @bp.route('/edit_feedback_comment/', methods=['POST'])
 def edit_comment():

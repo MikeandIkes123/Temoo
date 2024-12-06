@@ -43,31 +43,31 @@ def submit_sfeedback():
     seller = User.get(sid) 
     is_seller=User.is_seller(seller.id)
 
-    return render_template('public_view.html', user = seller, feedbacks=sfeedbacks, is_seller = is_seller)
+    return redirect(url_for('publicViewSearch.public_view', user_id=seller.id))
 
-@bp.route('/edit_feedback_comment/', methods=['POST'])
+@bp.route('/edit_sfeedback_comment/', methods=['POST'])
 def edit_scomment():
     review_id = request.form.get('review_id')
     curr_rating = request.form.get('curr_rating')
     new_comment = request.form.get('comment')
     seller_id = request.form.get('seller_id')
     SFeedback.update_feedback(review_id, current_user.id, new_comment, curr_rating)
-    return redirect(url_for('publicViewSearch.public_view', seller_id=seller_id))
+    return redirect(url_for('publicViewSearch.public_view', user_id=seller_id))
 
-@bp.route('/edit_feedback_rating/', methods=['POST'])
+@bp.route('/edit_sfeedback_rating/', methods=['POST'])
 def edit_srating():
     review_id = request.form.get('review_id')
     curr_comment = request.form.get('curr_comment')
     new_rating = request.form.get('rating')
     seller_id = request.form.get('seller_id')
     SFeedback.update_feedback(review_id, current_user.id, curr_comment, new_rating)
-    return redirect(url_for('publicViewSearch.public_view', seller_id=seller_id))
+    return redirect(url_for('publicViewSearch.public_view', user_id=seller_id))
 
 
-@bp.route('/delete_feedback/', methods=['POST'])
+@bp.route('/delete_sfeedback/', methods=['POST'])
 def delete_sfeedback():
-    seller_id = request.form['seller_id']
-    user_id = current_user.id  
-    SFeedback.delete_feedback(user_id, seller_id)
-    return redirect(url_for('publicViewSearch.public_view', seller_id=seller_id))
+    review_id = request.form['review_id']
+    seller_id = request.form.get('seller_id')
+    SFeedback.delete_feedback(review_id)
+    return redirect(url_for('publicViewSearch.public_view', user_id=seller_id))
 
