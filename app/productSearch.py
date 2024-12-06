@@ -51,6 +51,6 @@ def product_details(product_id):
     sellers_info = Sells.get_seller_from_product(product_id)
     
     if product:
-        return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks = feedback, sellers_info=sellers_info)
+        return render_template('product_details.html', product=product, current_user_id = current_user.id, feedbacks = feedback, sellers_info=sellers_info)
     else:
         return "Product not found", 404
