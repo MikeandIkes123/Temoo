@@ -1,13 +1,14 @@
 from flask import current_app as app
 
 class Purchase:
-    def __init__(self, id, uid, pid, sid, time_purchased, quantity):
+    def __init__(self, id, uid, pid, sid, time_purchased, quantity, fulfillment):
         self.id = id
         self.uid = uid
         self.pid = pid
         self.sid = sid  # Added sid (seller ID)
         self.time_purchased = time_purchased
         self.quantity = quantity
+        self.fulfillment = fulfillment
 
     @staticmethod
     def get(id):
@@ -37,6 +38,15 @@ FROM Purchases
 WHERE uid = :uid
 ORDER BY time_purchased DESC
 ''', uid=uid)
+        return [Purchase(*row) for row in rows]
+    
+    def get_all_purchases_for_seller(sid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, sid, time_purchased, quantity, fulfillment
+FROM Purchases
+WHERE sid = :sid
+ORDER BY time_purchased DESC, fulfillment DESC
+''', sid=sid)
         return [Purchase(*row) for row in rows]
 
     @staticmethod
@@ -72,3 +82,12 @@ ORDER BY time_purchased DESC
         result = app.db.execute(query, pid=pid)
         price = result[0][0] if result else 0
         return price * quantity  # Calculate price based on quantity
+
+    @staticmethod
+    def update_order_status(order_id):
+        query = '''
+            UPDATE Purchases
+            SET fulfillment = True
+            WHERE id = :order_id
+        '''
+        app.db.execute(query, order_id=order_id)

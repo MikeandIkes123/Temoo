@@ -89,6 +89,22 @@ class Cart:
             WHERE Cart.uid = :user_id
         '''
         app.db.execute(query_purchase, user_id=user_id)
+        
+        query_inventory = '''
+            UPDATE Sells
+            SET quantity = quantity - Cart.quantity
+            FROM Cart
+            WHERE Sells.pid = Cart.pid
+        '''
+        app.db.execute(query_inventory)
+        
+        query_products = '''
+            UPDATE Products
+            SET Products.quantity = Products.quantity - Cart.quantity
+            FROM Cart
+            WHERE Products.id = Cart.pid
+        '''
+        app.db.execute(query_sells)
 
         User.update_balance(user_id, 0, total_price)  # Assuming withdrawal only (no deposit)
 

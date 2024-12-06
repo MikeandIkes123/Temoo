@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% block title %}<h2>Products for Sale</h2>{% endblock %}
 {% block content %}
 
 <head>
@@ -91,7 +91,7 @@
   </style>
 </head>
 
-<h2>Products for sale:</h2>
+<!-- <h2>Products for sale:</h2> -->
 <article class="content">
   <table id="productsTable" class='table table-hover table-bordered container'>
     <thead class="thead-dark">
@@ -171,56 +171,89 @@
       });
     });
   });
-
   document.addEventListener('DOMContentLoaded', function () {
-    const content = document.querySelector('.content'); 
-    const itemsPerPage = 5;
+    const content = document.querySelector('.content');
+    const itemsPerPage = 10;
     let currentPage = 0;
     const items = Array.from(content.getElementsByTagName('tr')).slice(1);
-
+  
+    // show all items on the current page, hide rest 
     function showPage(page) {
       const startIndex = page * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       items.forEach((item, index) => {
         item.classList.toggle('hidden', index < startIndex || index >= endIndex);
       });
-      updateActiveButtonStates();
+      updatePageButtons();
     }
-
+    
+    // create pagination container with all buttons
     function createPageButtons() {
-      const totalPages = Math.ceil(items.length / itemsPerPage);
       const paginationContainer = document.createElement('div');
       paginationContainer.classList.add('pagination');
-
-      for (let i = 0; i < totalPages; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.textContent = i + 1;
-        pageButton.addEventListener('click', () => {
-          currentPage = i;
-          showPage(currentPage);
-          updateActiveButtonStates();
-        });
-        paginationContainer.appendChild(pageButton);
-      }
-
       content.appendChild(paginationContainer);
+      updatePageButtons();
     }
-
-    function updateActiveButtonStates() {
-      const pageButtons = document.querySelectorAll('.pagination button');
-      pageButtons.forEach((button, index) => {
-        if (index === currentPage) {
-          button.classList.add('active');
-        } else {
-          button.classList.remove('active');
+    // keep pagination updated upon loading content 
+    function updatePageButtons() {
+      const paginationContainer = document.querySelector('.pagination');
+      paginationContainer.innerHTML = '';
+  
+      const totalPages = Math.ceil(items.length / itemsPerPage);
+  
+      function createButton(page, text = page + 1) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.classList.toggle('active', page === currentPage);
+        button.addEventListener('click', () => {
+          currentPage = page;
+          showPage(currentPage);
+        });
+        return button;
+      }
+      
+      // edge case for first page and ellipsis behavior
+      if (currentPage > 0) {
+        const prevButton = createButton(currentPage - 1, 'Previous');
+        paginationContainer.appendChild(prevButton);
+      }
+      if (currentPage > 1) {
+        paginationContainer.appendChild(createButton(0));
+        if (currentPage > 2) {
+          const ellipsis = document.createElement('span');
+          ellipsis.textContent = '...';
+          paginationContainer.appendChild(ellipsis);
         }
-      });
+      }
+      
+      // find the first and last pages, then add surrounding buttons for each page 
+      const startPage = Math.max(0, currentPage - 1);
+      const endPage = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = startPage; i <= endPage; i++) {
+        paginationContainer.appendChild(createButton(i));
+      }
+  
+      // edge case for last page and ellipsis behavior 
+      if (currentPage < totalPages - 2) {
+        if (currentPage < totalPages - 3) {
+          const ellipsis = document.createElement('span');
+          ellipsis.textContent = '...';
+          paginationContainer.appendChild(ellipsis);
+        }
+        paginationContainer.appendChild(createButton(totalPages - 1));
+      }
+  
+      // next button definition 
+      if (currentPage < totalPages - 1) {
+        const nextButton = createButton(currentPage + 1, 'Next');
+        paginationContainer.appendChild(nextButton);
+      }
     }
-
+  
     createPageButtons();
     showPage(currentPage);
   });
-
+  
   function sortAlphaTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("productsTable");

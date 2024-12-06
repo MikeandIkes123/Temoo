@@ -18,9 +18,8 @@ def search_sellers():
 
     # get all inventory from the SQL database where uid = user_id 
     inventory = Sells.get_inventory_by_seller(user_id)
-
     if not inventory:
         return render_template('seller.html', error=f"No items found for seller ID {user_id}", user_id=user_id)
 
-    return render_template('seller.html', inventory=inventory, seller_id=user_id)
+    return render_template('products.html', products=inventory)
 

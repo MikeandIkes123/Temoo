@@ -66,7 +66,8 @@ def register():
                          form.firstname.data,
                          form.lastname.data,
                          form.address.data,
-                         balance = 0.0)
+                         balance = 0.0,
+        )
         if user:
             if form.is_seller.data:
                 User.add_seller(user.id)
