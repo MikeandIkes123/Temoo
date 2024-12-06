@@ -2,7 +2,7 @@
 
 {% block content %}
 <head>
-  <link rel="stylesheet" href="../static/css/cart.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
 </head>
 
 <h2>
@@ -33,7 +33,7 @@
               <form action="{{ url_for('cart.update_cart') }}" method="POST" class="inline-form">
                 <input type="number" name="quantity" value="{{ item.quantity }}" min="0">
                 <input type="hidden" name="product_id" value="{{ item.product_id }}">
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary" aria-label="Update Quantity">Update</button>
               </form>
             {% else %}
               {{ item.quantity }}
@@ -44,7 +44,7 @@
               <form action="{{ url_for('cart.update_cart') }}" method="POST" class="inline-form">
                 <input type="hidden" name="product_id" value="{{ item.product_id }}">
                 <input type="hidden" name="quantity" value="0">
-                <button type="submit" class="btn btn-danger">Remove</button>
+                <button type="submit" class="btn btn-danger" aria-label="Remove Item">Remove</button>
               </form>
             </td>
           {% endif %}
@@ -58,12 +58,14 @@
       {% endif %}
       {% if cart_items and user_id == current_user.id %}
         <form action="{{ url_for('cart.submit_cart') }}" method="POST" id="submit-cart-form">
-            <button type="button" class="btn btn-success" onclick="confirmSubmitCart()">Submit Order</button>
+            <button type="button" class="btn btn-success" onclick="confirmSubmitCart()" aria-label="Submit Order">Submit Order</button>
         </form>
       {% endif %}
     {% else %}
       <tr>
-        <td colspan="{% if user_id == current_user.id %}3{% else %}2{% endif %}">The cart is empty.</td>
+        <td colspan="{% if user_id == current_user.id %}3{% else %}2{% endif %}">
+          The cart is empty. {% if user_id == current_user.id %} Start shopping now! {% endif %}
+        </td>
       </tr>
     {% endif %}
   </tbody>
@@ -71,7 +73,7 @@
 
 {% if cart_items and user_id == current_user.id %}
   <form action="{{ url_for('cart.clear_cart') }}" method="POST" id="clear-cart-form">
-    <button type="button" class="btn btn-danger" onclick="confirmClearCart()">Clear Cart</button>
+    <button type="button" class="btn btn-danger" onclick="confirmClearCart()" aria-label="Clear Cart">Clear Cart</button>
   </form>
 {% endif %}
 

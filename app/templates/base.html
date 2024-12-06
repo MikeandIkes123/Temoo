@@ -62,7 +62,6 @@
 </head>
 
 <body>
-
   <nav class="navbar navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="{{ url_for('index.index') }}">
       <img src="{{ url_for('static', filename='assets/temoo-nobg.png') }}" width="150px" height="auto">
@@ -119,6 +118,11 @@
     {% block content %}{% endblock %}
   </div>
 
+  <script>
+    if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
+      window.location.href = "{{ url_for('users.login') }}";  // Redirect to login page
+    }
+  </script>
   <script>
     function updateFormAction() {
       const form = document.getElementById('combined-search-form');

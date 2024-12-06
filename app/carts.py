@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from flask_login import current_user # type: ignore
+from flask_login import current_user, login_required # type: ignore
 from .models.cart import Cart
 bp = Blueprint('cart', __name__)
 
 
 @bp.route('/view_cart', methods=['GET'])
+@login_required
 def view_cart():
     # Get user_id from the query parameter, if available, otherwise use current_user
     #FIXME: doesn't work unless person is logged in :( -> change default behavior 
