@@ -80,7 +80,10 @@ FROM Products
 WHERE id = :id
 ''',
                               id=id)
-        return Product(*(rows[0])) if rows is not None else None
+        product = Product(*(rows[0]))
+        product.ratings = Product.get_actual_ratings(product.id)
+        product.no_of_ratings = Product.get_number_of_ratings(product.id)
+        return product
 
     @staticmethod
     def get_all(available=True):
@@ -118,9 +121,13 @@ LIMIT 200
                     LIMIT :k
                     '''
         rows = app.db.execute(query, k=k)
-        return [Product(*row) for row in rows]
+        products = [Product(*row) for row in rows]
+        for product in products:
+            product.ratings = round(Product.get_actual_ratings(product.id) , 1)
+            product.no_of_ratings = Product.get_number_of_ratings(product.id)
+        return products
     
-
+    @staticmethod
     def get_category(cat, all=False):
         if all:
             query = '''
@@ -142,7 +149,7 @@ LIMIT 200
         rows = app.db.execute(query, cat=cat)
         return [Product(*row) for row in rows]
     
-    
+    @staticmethod
     def get_keyword(word, all=False):
         if all:
             query = '''
@@ -163,3 +170,13 @@ LIMIT 200
 
         rows = app.db.execute(query, word=word)
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def get_actual_ratings(pid):
+        rows = app.db.execute('''SELECT AVG(rating) FROM Feedbacks WHERE pid = :pid''', pid=pid)
+        return rows[0][0] if rows[0][0] else 0
+    
+    @staticmethod
+    def get_number_of_ratings(pid):
+        rows = app.db.execute('''SELECT COUNT(rating) FROM Feedbacks WHERE pid = :pid''', pid=pid)
+        return rows[0][0] if rows[0][0] else 0

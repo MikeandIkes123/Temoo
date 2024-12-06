@@ -17,7 +17,7 @@
         <h2 id="name">{{ product.name }}</h2>
         
         <div class="rating-tag">
-            <div class="rating">Rating: {{ product.ratings }} ({{ product.no_of_ratings }} ratings)</div>
+            <div class="rating">Rating: {{ product.ratings  | round(1) }} ({{ product.no_of_ratings }} ratings)</div>
             <div class="tags">
                 #{{ product.main_category }}
             </div>
