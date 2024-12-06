@@ -4,6 +4,7 @@ import datetime
 from flask import request
 
 from .models.product import Product
+from .models.feedback import Feedback
 
 from flask import Blueprint
 bp = Blueprint('productSearch', __name__)
@@ -18,3 +19,12 @@ def search_products():
         products = Product.get_top_k(k=top_k, all=False)
     
     return render_template('products.html', products=products)
+
+@bp.route('/product_details/<int:product_id>')
+def product_details(product_id):
+    product = Product.get(product_id)
+    feedback = Feedback.get_feedback_by_product(product_id)
+    if product:
+        return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks = feedback)
+    else:
+        return "Product not found", 404

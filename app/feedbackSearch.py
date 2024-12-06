@@ -10,6 +10,7 @@ import datetime
 
 from .models.user import User
 from .models.feedback import Feedback
+from .models.product import Product
 
 bp = Blueprint('feedbackSearch', __name__)
 
@@ -27,21 +28,46 @@ def search_feedback():
 
     return render_template('feedback.html', feedback_entries=feedback_entries, user_id=user_id)
 
+
+
+
+# @bp.route('/submit_feedback', methods=['POST'])
+# def submit_feedback():
+#     pid = request.form.get('product_id')
+#     comment = request.form.get('comment')
+#     rating = request.form.get('rating')
+
+#     if (not pid) or not comment or not rating:
+#         flash('All fields are required.', 'error')
+#         return redirect(url_for('productSearch.product_details', product_id = pid))
+#     success = Feedback.submit_feedback(current_user.id, pid, comment, rating)
+#     if success:
+#         flash('Your review has been successfully posted!', 'success')
+#     else:
+#         flash('Error: review could not be posted.', 'error')
+#     return redirect(url_for('productSearch.product_details', product_id = pid))
+
 @bp.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     pid = request.form.get('product_id')
     comment = request.form.get('comment')
     rating = request.form.get('rating')
 
-    if not pid or not comment or not rating:
-        flash('All fields are required.', 'error')
-        return redirect(url_for('productSearch.view_product', pid = pid))
+    if not (pid and comment and rating):
+        return render_template('product_details.html', product_id=pid, error="All fields are required.")
+
     success = Feedback.submit_feedback(current_user.id, pid, comment, rating)
     if success:
-        flash('Your review has been successfully posted!', 'success')
+        message = 'Your review has been successfully posted!'
     else:
-        flash('Error: review could not be posted.', 'error')
-    return redirect(url_for('productSearch.view_protduct', pid = pid))
+        message = 'Error: review could not be posted.'
+
+    # get updated list of reviews for product to display on detailed prod page
+    feedbacks = Feedback.get_feedback_by_product(pid)
+    product = Product.get(pid) 
+    print(current_user.id)
+    return render_template('product_details.html', product=product, current_user = current_user.id, feedbacks=feedbacks, message=message)
+
 
 @bp.route('/edit_feedback/<int:feedback_id>', methods=['GET', 'POST'])
 def edit_feedback(feedback_id):
@@ -49,23 +75,31 @@ def edit_feedback(feedback_id):
         comment = request.form.get('comment')
         rating = request.form.get('rating')
 
-        if not comment or not rating:
-            flash('All fields are required.', 'error')
-            return redirect(url_for('feedbackSearch.edit_feedback', feedback_id=feedback_id))
-        
-        Feedback.update_feedback(feedback_id, current_user.id, comment, rating)
-        flash('Review updated successfully!', 'success')
-        return redirect(url_for('feedbackSearch.search_feedback', user_id=current_user.id))
-    
+        if not (comment and rating):
+            error_message = 'All fields are required.'
+            feedback = Feedback.get_feedback(feedback_id)
+            return render_template('edit_feedback.html', feedback=feedback, error=error_message)
+
+        success = Feedback.update_feedback(feedback_id, current_user.id, comment, rating)
+        if success:
+            message = 'Review updated successfully!'
+        else:
+            message = 'Error updating review.'
+
+        return redirect(url_for('feedbackSearch.my_reviews', message=message))
+
     feedback = Feedback.get_feedback(feedback_id)
     if not feedback or feedback['uid'] != current_user.id:
-        flash('Unauthorized access.', 'error')
-        return redirect(url_for('index.index'))
-    
+        return render_template('unauthorized.html', error='Unauthorized access.')
+
     return render_template('edit_feedback.html', feedback=feedback)
+
 
 @bp.route('/delete_feedback/<int:feedback_id>', methods=['POST'])
 def delete_feedback(feedback_id):
-    Feedback.delete_feedback(feedback_id, current_user.id)
-    flash('Review deleted successfully!', 'success')
-    return redirect(url_for('feedbackSearch.search_feedback', user_id=current_user.id))
+    if Feedback.delete_feedback(feedback_id, current_user.id):
+        message = 'Review deleted successfully!'
+    else:
+        message = 'Error deleting review.'
+
+    return redirect(url_for('feedbackSearch.my_reviews', message=message))
