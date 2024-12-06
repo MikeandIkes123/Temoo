@@ -87,34 +87,10 @@ def edit_rating():
     return redirect(url_for('productSearch.product_details', product_id=product_id))
 
 
-
-
-    # if request.method == 'POST':
-    #     comment = request.form.get('comment')
-    #     rating = request.form.get('rating')
-
-    #     if not (comment and rating):
-    #         error_message = 'All fields are required.'
-    #         feedback = Feedback.get_feedback(feedback_id)
-    #         return render_template('edit_feedback.html', feedback=feedback, error=error_message)
-
-    #     success = Feedback.update_feedback(feedback_id, current_user.id, comment, rating)
-    #     if success:
-    #         message = 'Review updated successfully!'
-    #     else:
-    #         message = 'Error updating review.'
-
-    #     return redirect(url_for('feedbackSearch.my_reviews', message=message))
-
-    # feedback = Feedback.get_feedback(feedback_id)
-    # if not feedback or feedback.uid != current_user.id:
-    #     return render_template('unauthorized.html', error='Unauthorized access.')
-
-    # return render_template('edit_feedback.html', feedback=feedback)
-
 @bp.route('/delete_feedback/', methods=['POST'])
 def delete_feedback():
     product_id = request.form['product_id']
     user_id = current_user.id  
     Feedback.delete_feedback(user_id, product_id)
     return redirect(url_for('productSearch.product_details', product_id=product_id))
+
