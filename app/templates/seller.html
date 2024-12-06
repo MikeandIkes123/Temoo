@@ -123,7 +123,7 @@
                     {% for product in orders %}
                     <tr data-product-id="{{ product.id }}">
                     <th scope="row">{{ product.id }}</th>
-                    <td>{{ product.uid }}</td>
+                    <td><a href="{{ url_for('publicViewSearch.public_view', user_id=product.uid) }}">{{ product.uid }}</a></td>
                     <td>{{ product.pid }}</td>
                     <td>{{ product.time_purchased }}</td>
                     <td>{{ product.quantity }}</td>
