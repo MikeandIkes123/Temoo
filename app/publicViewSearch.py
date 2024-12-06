@@ -18,11 +18,15 @@ def public_view():
     seller_reviews = []
     if is_seller:
         seller_reviews = SFeedback.get_reviews_of_seller(user_id)
+        seller_rating = SFeedback.get_actual_ratings(user_id)
+        seller_no_of_ratings = SFeedback.get_number_of_ratings(user_id)
 
     return render_template(
         'public_view.html',
         user=user,
         feedbacks=seller_reviews,
         is_seller=is_seller,
-        current_user = current_user
+        current_user = current_user,
+        seller_rating = seller_rating, 
+        seller_no_of_ratings = seller_no_of_ratings
     )

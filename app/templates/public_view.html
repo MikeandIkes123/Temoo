@@ -43,7 +43,8 @@
         
         {% if feedbacks %}
         <h3>Seller Reviews</h3>
-            <table class="table">
+        <div class="rating"><p><strong> Rating: {{ seller_rating  | round(1) }} ({{ seller_no_of_ratings }} ratings)</strong></p></div>
+        <table class="table">
                 <thead>
                     <tr>
                         <th>Review ID</th>

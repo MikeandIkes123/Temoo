@@ -151,3 +151,14 @@ LIMIT 5;
             WHERE id = :review_id
         '''
         app.db.execute(query, review_id = review_id)
+        
+    # DYNAMICALLY CALCULATE THE AVERAGE RATING OF A SELLER
+    @staticmethod
+    def get_actual_ratings(sid):
+        rows = app.db.execute('''SELECT AVG(rating) FROM sFeedbacks WHERE sid = :sid''', sid=sid)
+        return rows[0][0] if rows[0][0] else 0
+    
+    @staticmethod
+    def get_number_of_ratings(sid):
+        rows = app.db.execute('''SELECT COUNT(rating) FROM sFeedbacks WHERE sid = :sid''', sid=sid)
+        return rows[0][0] if rows[0][0] else 0
