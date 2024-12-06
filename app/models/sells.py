@@ -38,5 +38,4 @@ class Sells:
                             WHERE pid = :pid
                             ''', pid = pid)
         # return Product(*(rows[0])) if rows else None
-        print(rows)
         return [Sells(*row) for row in rows] if rows else None

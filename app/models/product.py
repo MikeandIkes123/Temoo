@@ -80,7 +80,7 @@ WHERE quantity > 0
             query = f'''
                 SELECT * 
                 FROM Products
-                WHERE main_category LIKE '%{cat}%'
+                WHERE quantity > 0 AND UPPER(main_category) LIKE UPPER('%{cat}%')
                 ORDER BY ratings DESC
                 '''
 
@@ -101,7 +101,7 @@ WHERE quantity > 0
             query = f'''
                 SELECT * 
                 FROM Products
-                WHERE name LIKE '%{word}%'
+                WHERE quantity > 0 AND UPPER(name) LIKE UPPER('%{word}%')
                 ORDER BY ratings DESC
                 '''
 
